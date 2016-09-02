@@ -1,0 +1,82 @@
+.row .connect_status {
+    text-align: center;
+}
+
+.fix_width {
+    width:100%;
+    max-width: 100%;
+}
+
+.width95 {
+    width:95%;
+}
+
+#on_off_container {
+    display: block;
+    padding-left: 0;
+    padding-right:0;
+}
+
+.jog-panel {
+    display: inline-block;
+}
+
+#jog_panel_xy {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 20px;
+}
+
+#jog_panel_z {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#jog_info {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 30px;
+}
+
+#jog_ydec {
+    margin-left: 44px;
+    margin-bottom: 4px;
+}
+
+#jog_zup {
+    display: block;
+    margin-bottom: 4px;
+}
+
+#jog_yinc {
+    margin-left: 44px;
+    margin-top: 4px;
+}
+
+#jog_zdown {
+    display: block;
+}
+
+#jog_zhome {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/*button circle*/
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}

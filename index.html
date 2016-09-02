@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>3DRAION - RaionPiControl</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--BootStrap Switch-->
+    <link href="vendors/bootstrap-switch/dist/css/bootstrap2/bootstrap-switch.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Switchery -->
+    <!--<link href="vendors/switchery/dist/switchery.css" rel="stylesheet">-->
+    <!-- NProgress -->
+    <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <!--<link href="vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>-->
+    <!-- PNotify -->
+    <link href="vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="build/css/custom.min.css" rel="stylesheet">
+    <!-- User Theme Style -->
+    <link href="build/css/main.css" rel="stylesheet">
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>RaionPiControl</span></a>
+                </div>
+
+                <!-- menu profile quick info -->
+                <div class="profile">
+                    <div class="profile_pic">
+                        <img src="src/images/logo.png" alt="..." class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>Bienvenue,</span>
+                        <h2>admin</h2>
+                    </div>
+                </div>
+                <!-- /menu profile quick info -->
+
+                <br/>
+
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <h3>&nbsp;</h3>
+                        <ul class="nav side-menu">
+                            <li><a href="http://monitoring.3draion.com">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                Revenir à Monitoring</a>
+                            </li>
+                            <li><a>Profils d'impression</a>
+                            </li>
+                            <li><a>Paramètres</a>
+                            </li>
+                            <li><a>Mise à jour</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+<!--
+                <div class="sidebar-footer hidden-small">
+                    <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Logout">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a>
+                </div>
+-->
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                               aria-expanded="false">
+                                <img src="src/images/logo.png" alt="">admin
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="javascript:;"> Profile</a></li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li><a href="javascript:;">Help</a></li>
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
+                               aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">0</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="src/images/logo.png" alt="Profile Image"/></span>
+                                        <span><span>John Smith</span><span class="time">3 mins ago</span></span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a style="line-height: normal; text-align: center;;" id="on_off_container">
+                                <div>Arrêt/Marche</div>
+                                <div>
+                                    <button id="turnon" type="button" class="btn btn-success" style="padding: 1px 6px;">
+                                        ON
+                                    </button>
+                                    <button id="turnoff" type="button" class="btn btn-danger" style="padding: 1px 6px;">
+                                        OFF
+                                    </button>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <!-- top tiles -->
+            <div class="row tile_count" id="first_row">
+                <!--temperature-->
+                <div class="col-md-5 col-xs-12">
+                    <div class="row x_panel">
+                        <div class="x_title">
+                            <h2>Température</h2>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
+                                <span class="count_top"><i class="fa fa-fire"></i> Plateau</span>
+                                <div class="count info" id="temp_bed_actual">N/A</div>
+                                <span class="count_bottom">Temp. cible <i class="green info"
+                                                                          id="temp_bed_target">N/A</i></span>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
+                                <span class="count_top"><i class="fa fa-fire"></i> Tête d'impression</span>
+                                <div class="count info" id="temp_tool_actual">N/A</div>
+                                <span class="count_bottom">Temp. cible <i class="green info"
+                                                                          id="temp_tool_target">N/A</i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/temperature-->
+
+                <!--State-->
+                <div class="col-md-7 col-xs-12">
+                    <div class="row x_panel">
+                        <div class="x_title">
+                            <h2>Statut : <span id="connection-text" style="color: red;"> Déconnecté</span></h2>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <button type="button" class="btn btn-default" id="connection">
+                                <span id="connection-btn-text">Déconnecter</span>
+                            </button>
+                            <button type="button" class="btn btn-default" id="job_cancel" style="display: none">
+                                <span>Cancel</span>
+                            </button>
+                            <h5>Carte SD : <span class="info" id="sd_ready">N/A</span></h5>
+                            <h5>Fichier choisi : <span class="info" id="file_selected">N/A</span></h5>
+                        </div>
+                    </div>
+                </div>
+                <!--/State-->
+            </div>
+            <!-- /top tiles -->
+
+            <!--webcam-control-->
+            <div class="row">
+                <!--webcam-->
+                <div class="col-md-7 col-xs-12">
+                    <div class="row x_panel">
+                        <div class="x_title">
+                            <h2>Surveillance</h2>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                            </ul>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li><a class=""><i class="fa fa-refresh" id="surveillance-refresh"></i></a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content text-center" id="webcam"></div>
+                    </div>
+                </div>
+                <!--/webcam-->
+
+                <!--control-->
+                <div class="col-md-5 col-xs-12">
+                    <!--control-->
+                    <div class="row x_panel">
+                        <div class="x_title">
+                            <h2>Contrôle</h2>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up" id="control_collapse"></i></a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                                <li>
+                                    <button type="button"
+                                            class="btn btn-default btn-success no-padding jog_xyhome control_title_btn"
+                                            style="display: none;">
+                                        &nbsp;<i class="fa fa-home"> XY&nbsp;</i></button>
+                                </li>
+                                <li>
+                                    <button type="button"
+                                            class="btn btn-default btn-success no-padding jog_zhome control_title_btn"
+                                            style="display: none;">
+                                        &nbsp;<i class="fa fa-home"> Z&nbsp;</i></button>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="row x_content">
+                            <div class="jog-panel">
+                                <div class="jog-panel" id="jog_panel_xy">
+                                    <h4>Axe XY</h4>
+                                    <div>
+                                        <button type="button" class="btn btn-default" id="jog_ydec">
+                                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span> Y
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-default" id="jog_xinc">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> X
+                                        </button>
+                                        <button type="button" class="btn btn-default jog_xyhome" id="jog_xyhome">
+                                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default" id="jog_xdec">
+                                            X <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-default" id="jog_yinc">
+                                            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Y
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="jog-panel" id="jog_panel_z">
+                                    <h4>Axe Z</h4>
+                                    <button type="button" class="btn btn-default" id="jog_zup">
+                                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span> Z
+                                    </button>
+                                    <button type="button" class="btn btn-default jog_zhome" id="jog_zhome">
+                                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" id="jog_zdown">
+                                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Z
+                                    </button>
+                                </div>
+                                <div class="jog-panel" id="jog_info">
+                                    <h5>Position X : <span class="info" id="x_pos">N/A</span></h5>
+                                    <h5>Position Y : <span class="info" id="y_pos">N/A</span></h5>
+                                    <h5>Position Z : <span class="info" id="z_pos">N/A</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row x_content">
+                            <div class="col-xs-7 no-padding">
+                                <h4>Température cible</h4>
+                                <label>Plateau</label>
+                                <div class="input-group width95">
+                                    <input type="text" class="form-control" id="control_temp_bed_target" placeholder="Off">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary" id="control_temp_bed_set">Set</button>
+                                        <button type="button" class="btn btn-warning" id="control_temp_bed_off">Off</button>
+                                    </span>
+                                </div>
+                                <label>Tête d'impression</label>
+                                <div class="input-group width95">
+                                    <input type="text" class="form-control" id="control_temp_tool_target" placeholder="Off">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary" id="control_temp_tool_set">Set</button>
+                                        <button type="button" class="btn btn-warning" id="control_temp_tool_off">Off</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 no-padding">
+                                <h4>Outils</h4>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--/control-->
+                </div>
+                <!--/control-->
+            </div>
+            <!--/webcam-control-->
+
+            <!--files-->
+            <div class="row x_panel">
+                <div class="x_title">
+                    <h2>Fichiers</h2>
+                    <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action">
+                            <thead>
+                            <tr class="headings">
+                                <th></th>
+                                <th>Nom du fichier</th>
+                                <th>Date modification</th>
+                                <th>Taille</th>
+                                <th>Temps d'impression est.</th>
+                                <th>Longeur filament est.</th>
+                            </tr>
+                            </thead>
+                            <tbody id="file_table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="x_content">
+                    <a class="btn btn-app" id="file_select_print_btn">
+                        <i class="fa fa-print blue"></i>
+                        Print
+                    </a>
+                    <a class="btn btn-app" id="file_refresh_btn">
+                        <i class="fa fa-refresh purple"></i>
+                        Refresh
+                    </a>
+                    <a class="btn btn-app" id="file_upload_btn">
+                        <i class="fa fa-upload green"></i>
+                        Upload
+                    </a>
+                </div>
+            </div>
+            <!--/file-->
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+            <div class="pull-right">
+                3DRAION - 2016 <a href="https://www.3draion.com">Website</a>
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="vendors/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!--Bootstrap-switch-->
+<script src="vendors/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+<!-- FastClick -->
+<script src="vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="vendors/nprogress/nprogress.js"></script>
+<!-- Switchery -->
+<!--<script src="vendors/switchery/dist/switchery.js"></script>-->
+<!-- Chart.js -->
+<!--<script src="vendors/Chart.js/dist/Chart.min.js"></script>-->
+<!-- gauge.js -->
+<!--<script src="vendors/gauge.js/dist/gauge.min.js"></script>-->
+<!-- bootstrap-progressbar -->
+<!--<script src="vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>-->
+<!-- iCheck -->
+<script src="vendors/iCheck/icheck.min.js"></script>
+<!-- Skycons -->
+<!--<script src="vendors/skycons/skycons.js"></script>-->
+<!-- Flot -->
+<!--<script src="vendors/Flot/jquery.flot.js"></script>-->
+<!--<script src="vendors/Flot/jquery.flot.pie.js"></script>-->
+<!--<script src="vendors/Flot/jquery.flot.time.js"></script>-->
+<!--<script src="vendors/Flot/jquery.flot.stack.js"></script>-->
+<!--<script src="vendors/Flot/jquery.flot.resize.js"></script>-->
+<!-- Flot plugins -->
+<!--<script src="src/js/flot/jquery.flot.orderBars.js"></script>-->
+<!--<script src="src/js/flot/date.js"></script>-->
+<!--<script src="src/js/flot/jquery.flot.spline.js"></script>-->
+<!--<script src="src/js/flot/curvedLines.js"></script>-->
+<!-- JQVMap -->
+<!--<script src="vendors/jqvmap/dist/jquery.vmap.js"></script>-->
+<!--<script src="vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>-->
+<!--<script src="vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>-->
+<!-- bootstrap-daterangepicker -->
+<!--<script src="src/js/moment/moment.min.js"></script>-->
+<!--<script src="src/js/datepicker/daterangepicker.js"></script>-->
+
+<!-- PNotify -->
+<script src="vendors/pnotify/dist/pnotify.js"></script>
+<script src="vendors/pnotify/dist/pnotify.buttons.js"></script>
+<script src="vendors/pnotify/dist/pnotify.nonblock.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="build/js/custom.min.js"></script>
+<script src="build/js/main.js"></script>
+
+</body>
+</html>
