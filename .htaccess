@@ -1,5 +1,18 @@
-Order allow,deny
-Deny from all
-<FilesMatch index\.html>
-        Allow from all
+<Files "update.sh">
+    Order allow,deny
+    Deny from All
+</Files>
+
+<FilesMatch "(\.(bak|config|dist|fla|inc|ini|log|psd|sh|sql|swp|idea)|~)$">
+    ## Apache 2.2
+    Order allow,deny
+    Deny from all
+    Satisfy All
+
+    ## Apache 2.4
+    # Require all denied
 </FilesMatch>
+
+#RewriteCond %{SCRIPT_FILENAME} -d [OR]
+#RewriteCond %{SCRIPT_FILENAME} -f
+#RewriteRule "(^|/)\." - [F]
