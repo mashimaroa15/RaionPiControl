@@ -17,7 +17,7 @@ $(document).ready(function () {
     btn_on_off.bootstrapSwitch();
     btn_on_off.removeClass("bootstrap-switch bootstrap-switch-mini");
 
-    //const API_BASEURL = current_url + ':5001/api/'; // for test local only
+    //const API_BASEURL = current_url + 'api/'; // for test local only
     const API_BASEURL = current_url + 'control/api/';
     const API_KEY = 'raionpi';
     const DEF_DISTANCE = 10;
@@ -58,24 +58,34 @@ $(document).ready(function () {
         $(".info").html("N/A");
     }
 
-    self.updatePrinterCommand = function (responseAjax, operational) {
+    self.updateConnected = function (operational) {
+        connected = operational;
+    };
+
+    self.updateOnceStatus = function (responseAjax, operational) {
         info_printer = responseAjax;
         //verify if the machine is connected
         if (!operational) {
-            // console.log("4");
             connected = false;
-            console.log(connected);
-            // $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
-            // $("#connection-btn-text").html(" Connecter");
+            $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
+            $("#connection-btn-text").html(" Connecter");
             resetView();
         } else {
-            // console.log("5");
             connected = true;
-            // console.log(connected);
-            // $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
-            // $("#connection-btn-text").html("Déconnecter");
+            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
+            $("#connection-btn-text").html("Déconnecter");
             temp_bed_actual = info_printer.temperature.bed.actual;
             temp_tool_actual = info_printer.temperature.tool0.actual;
+            $("#temp_bed_actual").html(temp_bed_actual);
+            $("#temp_tool_actual").html(temp_tool_actual);
+
+            sd_ready = info_printer.sd.ready;
+            if (sd_ready) {
+                $("#sd_ready").html("Prêt");
+            } else {
+                $("#sd_ready").html("Pas présente");
+            }
+
             if (info_printer.temperature.bed.target == 0) {
                 temp_bed_target = "OFF";
             } else {
@@ -86,21 +96,27 @@ $(document).ready(function () {
             } else {
                 temp_tool_target = info_printer.temperature.tool0.target;
             }
-            sd_ready = info_printer.sd.ready;
 
-            $("#temp_bed_actual").html(temp_bed_actual);
             $("#temp_bed_target").html(temp_bed_target);
-            $("#temp_tool_actual").html(temp_tool_actual);
             $("#temp_tool_target").html(temp_tool_target);
 
-            $("#control_temp_bed_target").attr("placeholder",temp_bed_target);
-            $("#control_temp_tool_target").attr("placeholder",temp_tool_target);
+            $("#control_temp_bed_target").attr("placeholder", temp_bed_target);
+            $("#control_temp_tool_target").attr("placeholder", temp_tool_target);
+        }
+    };
 
-            if (sd_ready) {
-                $("#sd_ready").html("Prêt");
-            } else {
-                $("#sd_ready").html("Pas présente");
-            }
+    self.updateLoopStatus = function (responseAjax) {
+        info_printer = responseAjax;
+        temp_bed_actual = info_printer.temperature.bed.actual;
+        temp_tool_actual = info_printer.temperature.tool0.actual;
+        $("#temp_bed_actual").html(temp_bed_actual);
+        $("#temp_tool_actual").html(temp_tool_actual);
+
+        sd_ready = info_printer.sd.ready;
+        if (sd_ready) {
+            $("#sd_ready").html("Prêt");
+        } else {
+            $("#sd_ready").html("Pas présente");
         }
     };
 
@@ -108,8 +124,6 @@ $(document).ready(function () {
         if (connect) {
             var data = {
                 "command": "connect",
-                "port": "/dev/ttyUSB0",
-                "baudrate": 250000,
                 "autoconnect": true
             };
         } else {
@@ -126,36 +140,23 @@ $(document).ready(function () {
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
-        }).done(function () {
-            // if (connect) {
-            //     var tid_get_infoprinter = setInterval(get_infoprinter, 2000);
-            // }
-            // console.log("3");
-            // console.log(connected);
+        }).done(function (data) {
+            self.updateConnected(true);
+        }).fail(function (data) {
+            self.updateConnected(false);
         });
     };
 
     $("#connection").click(function () {
         if (!connected) {
-            // abortTimer();
             self.sendConnectCommand(true);
-            // var timeout1 = setTimeout(self.sendConnectCommand(true), 2000);
-            // var timeout2 = setTimeout(reactivateTimer, 2000);
-            // console.log("1");
-            // console.log(connected);
             $("#connection-text").html(" Connecté").attr("style", "color: green;");
             $("#connection-btn-text").html("Déconnecter");
-            $("#temp_bed_target").html("OFF");
-            $("#temp_tool_target").html("OFF");
-            $("#control_temp_bed_target").html("OFF");
-            $("#control_temp_tool_target").html("OFF");
-            // resetView();
         } else {
-            // console.log("2");
-            // console.log(connected);
             self.sendConnectCommand(false);
             $("#connection-text").html(" Déconnecté").attr("style", "color: red;");
             $("#connection-btn-text").html(" Connecter");
+            runLoopUpdate(true);
         }
     });
 
@@ -169,9 +170,9 @@ $(document).ready(function () {
             dataType: "json",
             contentType: "application/json; charset=UTF-8"
         }).done(function (data) {
-            self.updatePrinterCommand(data, true);
+            self.updateLoopStatus(data, true);
         }).fail(function (data) {
-            self.updatePrinterCommand(data, false);
+            self.updateLoopStatus(data, false);
             console.log("Fail to execute getFilesCommand");
         });
     };
@@ -212,12 +213,7 @@ $(document).ready(function () {
         $("#z_pos").html(z_pos);
     }
 
-    function getSelectedJogDistance() {
-        var selected_dist = $("label[class='btn btn-default active']").children().val();
-        return parseInt(selected_dist);
-    }
-    self.sendJogCommand = function (axis, multiplier) {
-        var distance = getSelectedJogDistance();
+    self.sendJogCommand = function (axis, multiplier, distance) {
         if (typeof distance === "undefined")
             distance = DEF_DISTANCE;
         var data = {
@@ -260,7 +256,7 @@ $(document).ready(function () {
             } else {
                 estTime = "N/A";
                 estFilament = "N/A"
-            };
+            }
 
             $("#file_table").append(
                 "<tr>" +
@@ -322,17 +318,15 @@ $(document).ready(function () {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
         }).done(function (data) {
-            console.log("cancel OK");
-            self.sendHomeCommand("xy");
-            self.sendHomeCommand("z");
+            console.log("cancel OK")
         });
     };
 
     self.updateSelectedFile = function (responseAjax) {
         $("#file_selected").html(responseAjax.name);
-        var size = Math.round(responseAjax.size);
-        size += " KB";
-        $("#file_size").html(size);
+        // var size = Math.round(responseAjax.size);
+        // size += " KB";
+        // $("#file_size").html(size);
     };
 
     self.getOneFileInfo = function (filename) {
@@ -364,7 +358,8 @@ $(document).ready(function () {
                     "tool0": temp
                 }
             };
-        };
+        }
+        ;
         $.post({
             url: API_BASEURL + "printer/" + type,
             headers: {
@@ -379,13 +374,13 @@ $(document).ready(function () {
         });
     };
 
-    function goToByScroll(id){
-        $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+    function goToByScroll(id) {
+        $('html,body').animate({scrollTop: $("#" + id).offset().top}, 'slow');
     }
 
     $("#file_select_print_btn").click(function () {
         goToByScroll("first_row");
-        $("#job_cancel").css("display","inline-block");
+        $("#job_cancel").css("display", "inline-block");
         var selected_file = $("input:radio[name='file_radiobutton_group']:checked").val();
         self.selectPrintCommand(selected_file, true);
         $("#file_select_print_btn").attr("disabled", "");
@@ -397,7 +392,7 @@ $(document).ready(function () {
 
     $("#job_cancel").click(function () {
         self.sendJobCancel();
-        $("#job_cancel").css("display","none");
+        $("#job_cancel").css("display", "none");
         $("#file_select_print_btn").removeAttr("disabled");
     });
 
@@ -408,9 +403,9 @@ $(document).ready(function () {
             $("#control_temp_bed_target").val("OFF");
             temp_bed_target = "OFF";
             $("#temp_bed_target").html("OFF");
-            self.sendTempSet("bed",0);
+            self.sendTempSet("bed", 0);
         } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_BED) {
+            if (parseInt(input) <= MAX_TEMP_BED) {
                 $("#control_temp_bed_target").val(parseInt(input));
                 temp_bed_target = parseInt(input);
                 $("#temp_bed_target").html(parseInt(input));
@@ -440,9 +435,9 @@ $(document).ready(function () {
             $("#control_temp_tool_target").val("OFF");
             temp_tool_target = "OFF";
             $("#temp_tool_target").html("OFF");
-            self.sendTempSet("tool",0);
+            self.sendTempSet("tool", 0);
         } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_TOOL) {
+            if (parseInt(input) <= MAX_TEMP_TOOL) {
                 $("#control_temp_tool_target").val(parseInt(input));
                 temp_tool_target = parseInt(input);
                 $("#temp_tool_target").html(parseInt(input));
@@ -479,10 +474,6 @@ $(document).ready(function () {
 
 
     /* Init first time load page */
-    self.sendPrinterCommand(); // check if connected
-    checkConnection();
-    self.getFilesCommand();
-
     function checkConnection() {
         $.get({
             url: API_BASEURL + "printer",
@@ -492,11 +483,10 @@ $(document).ready(function () {
             dataType: "json",
             contentType: "application/json; charset=UTF-8"
         }).done(function (data) {
-            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
-            $("#connection-btn-text").html("Déconnecter");
+            self.updateOnceStatus(data, true);
+            runLoopUpdate(true);
         }).fail(function (data) {
-            $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
-            $("#connection-btn-text").html(" Connecter");
+            self.updateOnceStatus(data, false);
         });
 
         $.get({
@@ -513,25 +503,26 @@ $(document).ready(function () {
         })
     }
 
+    self.getFilesCommand();
+    checkConnection();
+
     /* Loop Functions */
-    // set interval
-    var tid_get_infoprinter = setInterval(get_infoprinter, 2000);
-    // var tid_get_files = setInterval(get_files, 10000);
+    var tid_get_infoprinter;
 
     function get_infoprinter() {
         self.sendPrinterCommand();
     }
 
-    // function get_files() {
-    //     self.getFilesCommand();
-    // }
+    function runLoopUpdate(operational) {
+        // set interval
+        if (operational) {
+            tid_get_infoprinter = setInterval(get_infoprinter, 2000);
+        }
+    }
 
     function abortTimer() { // to be called when you want to stop the timer
         clearInterval(tid_get_infoprinter);
-    }
-    
-    function reactivateTimer() {
-        var tid_get_infoprinter = setInterval(get_infoprinter, 2000);
+        // clearInterval(tid_get_files);
     }
 
     // Turn on/off
@@ -557,33 +548,35 @@ $(document).ready(function () {
     // JOG PANEL
 
     $("#control_collapse").click(function () {
-        if($(".control_title_btn").css("display") == "none") {
-            $(".control_title_btn").css("display","inline-block")
+        if ($(".control_title_btn").css("display") == "none") {
+            $(".control_title_btn").css("display", "inline-block")
         } else {
-            $(".control_title_btn").css("display","none")
+            $(".control_title_btn").css("display", "none")
         }
     });
 
+    distance = 10;
+
     $("#jog_xinc").click(function () {
-        self.sendJogCommand("x", multiplier * -1)
+        self.sendJogCommand("x", multiplier * -1, distance)
     });
     $("#jog_xdec").click(function () {
-        self.sendJogCommand("x", multiplier)
+        self.sendJogCommand("x", multiplier, distance)
     });
     $("#jog_yinc").click(function () {
-        self.sendJogCommand("y", multiplier * -1)
+        self.sendJogCommand("y", multiplier * -1, distance)
     });
     $("#jog_ydec").click(function () {
-        self.sendJogCommand("y", multiplier)
+        self.sendJogCommand("y", multiplier, distance)
     });
     $(".jog_xyhome").click(function () {
         self.sendHomeCommand("xy")
     });
     $("#jog_zup").click(function () {
-        self.sendJogCommand("z", multiplier * -1)
+        self.sendJogCommand("z", multiplier * -1, distance)
     });
     $("#jog_zdown").click(function () {
-        self.sendJogCommand("z", multiplier)
+        self.sendJogCommand("z", multiplier, distance)
     });
     $(".jog_zhome").click(function () {
         self.sendHomeCommand("z")

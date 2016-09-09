@@ -78,22 +78,22 @@
                 <!-- /sidebar menu -->
 
                 <!-- /menu footer buttons -->
-<!--
-                <div class="sidebar-footer hidden-small">
-                    <a data-toggle="tooltip" data-placement="top" title="Settings">
-                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Lock">
-                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Logout">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                    </a>
-                </div>
--->
+                <!--
+                                <div class="sidebar-footer hidden-small">
+                                    <a data-toggle="tooltip" data-placement="top" title="Settings">
+                                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                    </a>
+                                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                                    </a>
+                                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                                    </a>
+                                    <a data-toggle="tooltip" data-placement="top" title="Logout">
+                                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                -->
                 <!-- /menu footer buttons -->
             </div>
         </div>
@@ -184,13 +184,13 @@
                                 <span class="count_top"><i class="fa fa-fire"></i> Plateau</span>
                                 <div class="count info" id="temp_bed_actual">N/A</div>
                                 <span class="count_bottom">Temp. cible <i class="green info"
-                                                                          id="temp_bed_target">N/A</i></span>
+                                                                          id="temp_bed_target">OFF</i></span>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
                                 <span class="count_top"><i class="fa fa-fire"></i> Tête d'impression</span>
                                 <div class="count info" id="temp_tool_actual">N/A</div>
                                 <span class="count_bottom">Temp. cible <i class="green info"
-                                                                          id="temp_tool_target">N/A</i></span>
+                                                                          id="temp_tool_target">OFF</i></span>
                             </div>
                         </div>
                     </div>
@@ -201,7 +201,9 @@
                 <div class="col-md-7 col-xs-12">
                     <div class="row x_panel">
                         <div class="x_title">
-                            <h2>Statut : <span id="connection-text" style="color: red;"> Déconnecté</span></h2>
+                            <h2>Statut : <span id="connection-text" style="color: red;"> <img
+                                    src="src/images/loading.gif"
+                                    alt="..." style="max-width: 100%; max-height: 100%"/></span></h2>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                             </ul>
@@ -274,7 +276,8 @@
                                 <div class="jog-panel" id="jog_panel_xy">
                                     <h4>Axe XY</h4>
                                     <div>
-                                        <button type="button" class="btn btn-default" id="jog_ydec">
+                                        <button type="button" class="btn btn-default" id="jog_ydec"
+                                                style="width: 75px;">
                                             <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span> Y
                                         </button>
                                     </div>
@@ -290,20 +293,38 @@
                                         </button>
                                     </div>
                                     <div>
-                                        <button type="button" class="btn btn-default" id="jog_yinc">
+                                        <button type="button" class="btn btn-default" id="jog_yinc"
+                                                style="width: 75px; margin-top: 0;">
                                             <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Y
                                         </button>
+                                    </div>
+                                    <div>
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_01" value="0.1">0.1
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_1" value="1">1
+                                            </label>
+                                            <label class="btn btn-default active">
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_10" value="10">10
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_100" value="100">100
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="jog-panel" id="jog_panel_z">
                                     <h4>Axe Z</h4>
-                                    <button type="button" class="btn btn-default" id="jog_zup">
+                                    <button type="button" class="btn btn-default" id="jog_zup" style="width: 55px;">
                                         <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span> Z
                                     </button>
-                                    <button type="button" class="btn btn-default jog_zhome" id="jog_zhome">
+                                    <button type="button" class="btn btn-default jog_zhome" id="jog_zhome"
+                                            style="width: 55px;">
                                         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                                     </button>
-                                    <button type="button" class="btn btn-default" id="jog_zdown">
+                                    <button type="button" class="btn btn-default" id="jog_zdown" style="width: 55px;">
                                         <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Z
                                     </button>
                                 </div>
@@ -319,18 +340,24 @@
                                 <h4>Température cible</h4>
                                 <label>Plateau</label>
                                 <div class="input-group width95">
-                                    <input type="text" class="form-control" id="control_temp_bed_target" placeholder="Off">
+                                    <input type="text" class="form-control" id="control_temp_bed_target"
+                                           placeholder="OFF">
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary" id="control_temp_bed_set">Set</button>
-                                        <button type="button" class="btn btn-warning" id="control_temp_bed_off">Off</button>
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_temp_bed_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_temp_bed_off">Off</button>
                                     </span>
                                 </div>
                                 <label>Tête d'impression</label>
                                 <div class="input-group width95">
-                                    <input type="text" class="form-control" id="control_temp_tool_target" placeholder="Off">
+                                    <input type="text" class="form-control" id="control_temp_tool_target"
+                                           placeholder="OFF">
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary" id="control_temp_tool_set">Set</button>
-                                        <button type="button" class="btn btn-warning" id="control_temp_tool_off">Off</button>
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_temp_tool_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_temp_tool_off">Off</button>
                                     </span>
                                 </div>
                             </div>
@@ -382,10 +409,10 @@
                         <i class="fa fa-refresh purple"></i>
                         Refresh
                     </a>
-                    <a class="btn btn-app" id="file_upload_btn">
-                        <i class="fa fa-upload green"></i>
-                        Upload
-                    </a>
+                    <!--<a class="btn btn-app" id="file_upload_btn">-->
+                    <!--<i class="fa fa-upload green"></i>-->
+                    <!--Upload-->
+                    <!--</a>-->
                 </div>
             </div>
             <!--/file-->
