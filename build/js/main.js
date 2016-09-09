@@ -3,10 +3,24 @@ $(document).ready(function () {
     var self = this;
 
     //var current_url = "http://192.168.1.69:5001/"; // for test local only
+    var touchscreen;
     var current_url = window.location.href; //http://monitoring.3draion.com/raion1/   ---- with slash !!!
-    var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
-    var html_url_webcam = '<img src="' + current_url_trim + '/stream/?action=stream" alt="Chargement du flux webcam..." ' +
-        'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+    //test if this is for touchscreen
+    if (current_url.indexOf("#touch") !== -1) {
+        touchscreen=true;
+        console.log(touchscreen);
+        current_url = "http://localhost:5001/";
+    }
+    // var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
+    var url_webcam_touchscreen = "http://localhost:8080/";
+    var html_url_webcam;
+    if (touchscreen) {
+        html_url_webcam = '<img src="' + url_webcam_touchscreen + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
+            'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+    } else {
+        html_url_webcam = '<img src="' + current_url + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
+            'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+    }
     //apply changes to html document
     $("#webcam").html(html_url_webcam);
     $("#surveillance-refresh").click(function () {
@@ -18,7 +32,8 @@ $(document).ready(function () {
     btn_on_off.removeClass("bootstrap-switch bootstrap-switch-mini");
 
     //const API_BASEURL = current_url + 'api/'; // for test local only
-    const API_BASEURL = current_url + 'control/api/';
+    //const API_BASEURL = current_url + 'control/api/';  //for online
+    const API_BASEURL = current_url + 'api/';   //for touchscreen
     const API_KEY = 'raionpi';
     const DEF_DISTANCE = 10;
     const DEF_MULTIPLIER = 1;
@@ -95,8 +110,8 @@ $(document).ready(function () {
             $("#temp_tool_actual").html(temp_tool_actual);
             $("#temp_tool_target").html(temp_tool_target);
 
-            $("#control_temp_bed_target").attr("placeholder",temp_bed_target);
-            $("#control_temp_tool_target").attr("placeholder",temp_tool_target);
+            $("#control_temp_bed_target").attr("placeholder", temp_bed_target);
+            $("#control_temp_tool_target").attr("placeholder", temp_tool_target);
 
             if (sd_ready) {
                 $("#sd_ready").html("Prêt");
@@ -237,7 +252,8 @@ $(document).ready(function () {
             } else {
                 estTime = "N/A";
                 estFilament = "N/A"
-            };
+            }
+            ;
 
             $("#file_table").append(
                 "<tr>" +
@@ -339,7 +355,8 @@ $(document).ready(function () {
                     "tool0": temp
                 }
             };
-        };
+        }
+        ;
         $.post({
             url: API_BASEURL + "printer/" + type,
             headers: {
@@ -354,13 +371,13 @@ $(document).ready(function () {
         });
     };
 
-    function goToByScroll(id){
-        $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+    function goToByScroll(id) {
+        $('html,body').animate({scrollTop: $("#" + id).offset().top}, 'slow');
     }
 
     $("#file_select_print_btn").click(function () {
         goToByScroll("first_row");
-        $("#job_cancel").css("display","inline-block");
+        $("#job_cancel").css("display", "inline-block");
         var selected_file = $("input:radio[name='file_radiobutton_group']:checked").val();
         self.selectPrintCommand(selected_file, true);
         $("#file_select_print_btn").attr("disabled", "");
@@ -372,7 +389,7 @@ $(document).ready(function () {
 
     $("#job_cancel").click(function () {
         self.sendJobCancel();
-        $("#job_cancel").css("display","none");
+        $("#job_cancel").css("display", "none");
         $("#file_select_print_btn").removeAttr("disabled");
     });
 
@@ -383,9 +400,9 @@ $(document).ready(function () {
             $("#control_temp_bed_target").val("OFF");
             temp_bed_target = "OFF";
             $("#temp_bed_target").html("OFF");
-            self.sendTempSet("bed",0);
+            self.sendTempSet("bed", 0);
         } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_BED) {
+            if (parseInt(input) <= MAX_TEMP_BED) {
                 $("#control_temp_bed_target").val(parseInt(input));
                 temp_bed_target = parseInt(input);
                 $("#temp_bed_target").html(parseInt(input));
@@ -415,9 +432,9 @@ $(document).ready(function () {
             $("#control_temp_tool_target").val("OFF");
             temp_tool_target = "OFF";
             $("#temp_tool_target").html("OFF");
-            self.sendTempSet("tool",0);
+            self.sendTempSet("tool", 0);
         } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_TOOL) {
+            if (parseInt(input) <= MAX_TEMP_TOOL) {
                 $("#control_temp_tool_target").val(parseInt(input));
                 temp_tool_target = parseInt(input);
                 $("#temp_tool_target").html(parseInt(input));
@@ -443,13 +460,13 @@ $(document).ready(function () {
     $("#control_temp_bed_off").click(function () {
         $("#control_temp_bed_target").val("OFF");
         $("#temp_bed_target").html("OFF");
-        self.sendTempSet("bed",0);
+        self.sendTempSet("bed", 0);
     });
 
     $("#control_temp_tool_off").click(function () {
         $("#control_temp_tool_target").val("OFF");
         $("#temp_tool_target").html("OFF");
-        self.sendTempSet("tool",0);
+        self.sendTempSet("tool", 0);
     })
 
 
@@ -498,10 +515,10 @@ $(document).ready(function () {
     // JOG PANEL
 
     $("#control_collapse").click(function () {
-        if($(".control_title_btn").css("display") == "none") {
-            $(".control_title_btn").css("display","inline-block")
+        if ($(".control_title_btn").css("display") == "none") {
+            $(".control_title_btn").css("display", "inline-block")
         } else {
-            $(".control_title_btn").css("display","none")
+            $(".control_title_btn").css("display", "none")
         }
     });
 
@@ -509,7 +526,7 @@ $(document).ready(function () {
 
     $("#jog_xinc").click(function () {
         self.sendJogCommand("x", multiplier * -1, distance)
-});
+    });
     $("#jog_xdec").click(function () {
         self.sendJogCommand("x", multiplier, distance)
     });
