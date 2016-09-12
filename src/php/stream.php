@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "localhost:5001/api/printer",
+  CURLOPT_URL => "http://localhost:8080/?action=stream",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,
@@ -29,5 +29,3 @@ if ($err) {
 } else {
   echo $response;
 }
-
-?>
