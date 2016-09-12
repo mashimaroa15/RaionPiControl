@@ -71,7 +71,7 @@
                             </li>
                             <li><a>Mise à jour</a>
                             </li>
-                            <li><a href="javascript:location.reload(true);">Refresh</a>
+                            <li><a href="javascript:location.reload(true);" id="userid">Refresh</a>
                             </li>
                         </ul>
                     </div>
@@ -172,12 +172,26 @@
             <!-- top tiles -->
             <div class="row tile_count" id="first_row">
                 <!--temperature-->
-                <div class="col-md-5 col-xs-12">
+                <div class="col-md-5 col-xs-12" id="card_temperature">
                     <div class="row x_panel">
                         <div class="x_title">
                             <h2>Température</h2>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="collapse-link" id="collapse_temperature"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-right panel_toolbox" id="temp_title_stats" style="display:none;
+                                                        min-width: 0; padding-top: 3px">
+                                <li>
+                                    <span id="temp_bed_actual_title" style="color: #7b4d73; font-weight: normal">tmp</span>/
+                                    <span id="temp_bed_target_title" style="color: #1ABB9C; font-weight: normal">goal</span>
+                                    <span>&nbsp;</span>
+                                </li>
+                                <li>
+                                    <span id="temp_tool_actual_title" style="color: #7b4d73; font-weight: normal">tmp</span>/
+                                    <span id="temp_tool_target_title" style="color: #1ABB9C; font-weight: normal">/goal</span>
+                                    <span>&nbsp;</span>
+                                </li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -200,14 +214,15 @@
                 <!--/temperature-->
 
                 <!--State-->
-                <div class="col-md-7 col-xs-12">
+                <div class="col-md-7 col-xs-12" id="card_status">
                     <div class="row x_panel">
                         <div class="x_title">
                             <h2>Statut : <span id="connection-text" style="color: red;"> <img
                                     src="src/images/loading.gif"
                                     alt="..." style="max-width: 100%; max-height: 100%"/></span></h2>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="collapse-link" id="collapse_status"><i class="fa fa-chevron-up"></i></a>
+                                </li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -230,12 +245,13 @@
             <!--webcam-control-->
             <div class="row">
                 <!--webcam-->
-                <div class="col-md-7 col-xs-12">
+                <div class="col-md-7 col-xs-12" id="card_monitor">
                     <div class="row x_panel">
                         <div class="x_title">
                             <h2>Surveillance</h2>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="collapse-link" id="collapse_monitor"><i class="fa fa-chevron-up"></i></a>
+                                </li>
                             </ul>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
                                 <li><a class=""><i class="fa fa-refresh" id="surveillance-refresh"></i></a></li>
@@ -248,13 +264,13 @@
                 <!--/webcam-->
 
                 <!--control-->
-                <div class="col-md-5 col-xs-12">
+                <div class="col-md-5 col-xs-12" id="card_control">
                     <!--control-->
                     <div class="row x_panel">
                         <div class="x_title">
                             <h2>Contrôle</h2>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up" id="control_collapse"></i></a>
+                                <li><a class="collapse-link" id="collapse_control"><i class="fa fa-chevron-up"></i></a>
                                 </li>
                             </ul>
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
@@ -303,7 +319,8 @@
                                     <div>
                                         <div class="btn-group" data-toggle="buttons">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="jog_dist_options" id="jog_dist_01" value="0.1">0.1
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_01"
+                                                       value="0.1">0.1
                                             </label>
                                             <label class="btn btn-default">
                                                 <input type="radio" name="jog_dist_options" id="jog_dist_1" value="1">1
@@ -312,7 +329,8 @@
                                                 <input type="radio" name="jog_dist_options" id="jog_dist_10" value="10">10
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="jog_dist_options" id="jog_dist_100" value="100">100
+                                                <input type="radio" name="jog_dist_options" id="jog_dist_100"
+                                                       value="100">100
                                             </label>
                                         </div>
                                     </div>
@@ -376,11 +394,11 @@
             <!--/webcam-control-->
 
             <!--files-->
-            <div class="row x_panel">
+            <div class="row x_panel" id="card_files">
                 <div class="x_title">
                     <h2>Fichiers</h2>
                     <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                        <li><a class="collapse-link" id="collapse_files"><i class="fa fa-chevron-up"></i></a></li>
                     </ul>
                     <div class="clearfix"></div>
                 </div>

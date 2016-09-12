@@ -5,27 +5,31 @@ $(document).ready(function () {
     //var current_url = "http://192.168.1.69:5001/"; // for test local only
     var touchscreen;
     var current_url = window.location.href; //http://monitoring.3draion.com/raion1/   ---- with slash !!!
+    console.log(current_url);
     //test if this is for touchscreen
-    if (current_url.indexOf("#touch") !== -1) {
+    if (current_url.indexOf("localhost") !== -1) {
         touchscreen=true;
-        console.log(touchscreen);
-        current_url = "http://localhost:5001/";
+        $("#userid").append(" (touchscreen)");
     }
-    // var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
-    var url_webcam_touchscreen = "http://localhost:8080/";
+    //var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
+    var url_webcam_touchscreen = current_url + ":8080/";
+    // var url_webcam_normalscreen = "http://10.8.0.2:8080/";
     var html_url_webcam;
     if (touchscreen) {
-        html_url_webcam = '<img src="' + url_webcam_touchscreen + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
+        html_url_webcam = '<img src="' + url_webcam_touchscreen + '?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+        $("#card_monitor").hide();
+        $("#collapse_temperature").click();
+        $("#collapse_status").click();
+        $("#temp_title_stats").show();
     } else {
         html_url_webcam = '<img src="' + current_url + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
-    }
-    //apply changes to html document
-    $("#webcam").html(html_url_webcam);
-    $("#surveillance-refresh").click(function () {
         $("#webcam").html(html_url_webcam);
-    });
+        $("#surveillance-refresh").click(function () {
+            $("#webcam").html(html_url_webcam);
+        });
+    }
 
     var btn_on_off = $("[name='on_off']");
     btn_on_off.bootstrapSwitch();
@@ -106,9 +110,13 @@ $(document).ready(function () {
             sd_ready = info_printer.sd.ready;
 
             $("#temp_bed_actual").html(temp_bed_actual);
+            $("#temp_bed_actual_title").html(temp_bed_actual);
             $("#temp_bed_target").html(temp_bed_target);
+            $("#temp_bed_target_title").html(temp_bed_target);
             $("#temp_tool_actual").html(temp_tool_actual);
+            $("#temp_tool_actual_title").html(temp_tool_actual);
             $("#temp_tool_target").html(temp_tool_target);
+            $("#temp_tool_target_title").html(temp_tool_target);
 
             $("#control_temp_bed_target").attr("placeholder", temp_bed_target);
             $("#control_temp_tool_target").attr("placeholder", temp_tool_target);
@@ -125,6 +133,8 @@ $(document).ready(function () {
         if (connect) {
             var data = {
                 "command": "connect",
+                "port": "/dev/ttyUSB0",
+                "baudrate": 250000,
                 "autoconnect": true
             };
         } else {
@@ -133,14 +143,17 @@ $(document).ready(function () {
                 "autoconnect": true
             };
         }
+        console.log("here in sendConnect");
         $.post({
-            url: API_BASEURL + "connection",
+            url: "src/php/connection.php",
             headers: {
                 "X-Api-Key": API_KEY
             },
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
+        }).done(function (data) {
+            alert(data);
         });
     };
 
@@ -159,7 +172,7 @@ $(document).ready(function () {
     self.sendPrinterCommand = function () {
         $.get({
             // url: API_BASEURL + "printer",
-            url: "index2.php",
+            url: "src/php/printer.php",
             headers: {
                 "X-Api-Key": API_KEY
             },
@@ -175,7 +188,8 @@ $(document).ready(function () {
 
     self.sendPrintHeadCommand = function (data) {
         $.post({
-            url: API_BASEURL + "printer/printhead",
+            // url: API_BASEURL + "printer/printhead",
+            url: "src/php/printer.printhead.php",
             headers: {
                 "X-Api-Key": API_KEY
             },
@@ -209,7 +223,13 @@ $(document).ready(function () {
         $("#z_pos").html(z_pos);
     }
 
+    function getSelectedJogDistance() {
+        var selected_dist = $("label[class='btn btn-default active']").children().val();
+        return parseInt(selected_dist);
+    }
+
     self.sendJogCommand = function (axis, multiplier, distance) {
+        var distance = getSelectedJogDistance();
         if (typeof distance === "undefined")
             distance = DEF_DISTANCE;
         var data = {
@@ -271,7 +291,8 @@ $(document).ready(function () {
 
     self.getFilesCommand = function () {
         $.get({
-            url: API_BASEURL + "files/local",
+            // url: API_BASEURL + "files/local",
+            url: "src/php/files.php",
             headers: {
                 "X-Api-Key": API_KEY
             },
@@ -285,18 +306,9 @@ $(document).ready(function () {
     };
 
     self.selectPrintCommand = function (filename, print) {
-        var data = {
-            "command": "select",
-            "print": print
-        };
         $.post({
-            url: API_BASEURL + "files/local/" + filename,
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(data)
+            url: "src/php/print.php",
+            data: {"filename": filename}
         }).done(function (data) {
             self.getOneFileInfo(filename);
         });
@@ -307,7 +319,8 @@ $(document).ready(function () {
             "command": "cancel"
         };
         $.post({
-            url: API_BASEURL + "job",
+            //url: API_BASEURL + "job",
+            url: "src/php/job.php",
             headers: {
                 "X-Api-Key": API_KEY
             },
@@ -327,14 +340,11 @@ $(document).ready(function () {
     };
 
     self.getOneFileInfo = function (filename) {
-        $.get({
-            url: API_BASEURL + "files/local/" + filename,
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8"
+        $.post({
+            url: "src/php/getOneFileInfo.php",
+            data: {"filename": filename}
         }).done(function (data) {
+            alert(data);
             self.updateSelectedFile(data);
         }).fail(function (data) {
             console.log("Fail to execute getFilesCommand");
@@ -343,11 +353,13 @@ $(document).ready(function () {
 
     self.sendTempSet = function (type, temp) {
         var data;
+        var url_dest;
         if (type == "bed") {
             data = {
                 "command": "target",
                 "target": temp
             };
+            url_dest = "src/php/printer.setTempBed.php";
         } else {
             data = {
                 "command": "target",
@@ -355,10 +367,10 @@ $(document).ready(function () {
                     "tool0": temp
                 }
             };
+            url_dest = "src/php/printer.setTempTool.php";
         }
-        ;
         $.post({
-            url: API_BASEURL + "printer/" + type,
+            url: url_dest,
             headers: {
                 "X-Api-Key": API_KEY
             },
@@ -366,8 +378,7 @@ $(document).ready(function () {
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
         }).done(function (data) {
-            var log = "set temp OK : " + type + " to " + temp;
-            console.log(log)
+            console.log(data);
         });
     };
 
@@ -466,8 +477,10 @@ $(document).ready(function () {
     $("#control_temp_tool_off").click(function () {
         $("#control_temp_tool_target").val("OFF");
         $("#temp_tool_target").html("OFF");
+        abortTimer();
         self.sendTempSet("tool", 0);
-    })
+        var tid_get_infoprinter = setInterval(get_infoprinter, 500);
+    });
 
 
     /* Init first time load page */
@@ -476,20 +489,14 @@ $(document).ready(function () {
 
     /* Loop Functions */
     // set interval
-    var tid_get_infoprinter = setInterval(get_infoprinter, 2000);
-    // var tid_get_files = setInterval(get_files, 10000);
+    var tid_get_infoprinter = setInterval(get_infoprinter, 500);
 
     function get_infoprinter() {
         self.sendPrinterCommand();
     }
 
-    // function get_files() {
-    //     self.getFilesCommand();
-    // }
-
     function abortTimer() { // to be called when you want to stop the timer
         clearInterval(tid_get_infoprinter);
-        // clearInterval(tid_get_files);
     }
 
     // Turn on/off
@@ -514,7 +521,7 @@ $(document).ready(function () {
 
     // JOG PANEL
 
-    $("#control_collapse").click(function () {
+    $("#collapse_control").click(function () {
         if ($(".control_title_btn").css("display") == "none") {
             $(".control_title_btn").css("display", "inline-block")
         } else {

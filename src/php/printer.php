@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "http://monitoring.3draion.com/raion2/control/api/printer",
+  CURLOPT_URL => "http://localhost:5001/api/printer",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,
@@ -14,7 +14,6 @@ curl_setopt_array($curl, array(
   CURLOPT_HTTPHEADER => array(
     "cache-control: no-cache",
     "content-type: application/json",
-    "postman-token: da14c348-0529-babe-982d-59fb13584f90",
     "x-api-key: raionpi"
   ),
 ));
@@ -29,3 +28,5 @@ if ($err) {
 } else {
   echo $response;
 }
+
+?>
