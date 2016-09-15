@@ -2,10 +2,14 @@
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$inputJSON = file_get_contents('php://input');
-$input= json_decode($inputJSON, TRUE );
-
 $curl = curl_init();
+
+if ($_POST["command"] === "pause") {
+    $post_field = "{\"command\": \"pause\",
+                    \"action\": \"pause\"}";
+} elseif ($_POST["command"] === "cancel") {
+    $post_field = "{\"command\": \"cancel\"}";
+}
 
 curl_setopt_array($curl, array(
     CURLOPT_URL => "http://localhost:5001/api/job",
@@ -15,7 +19,7 @@ curl_setopt_array($curl, array(
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => $method,
-    CURLOPT_POSTFIELDS => $inputJSON,
+    CURLOPT_POSTFIELDS => $post_field,
     CURLOPT_HTTPHEADER => array(
         "cache-control: no-cache",
         "content-type: application/json",
@@ -33,5 +37,3 @@ if ($err) {
 } else {
     echo $response;
 }
-
-?>

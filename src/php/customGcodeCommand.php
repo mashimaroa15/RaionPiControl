@@ -1,20 +1,16 @@
 <?php
 
-$post_field = "{\"command\": \"connect\",
-                \"port\": \"/dev/ttyUSB0\",
-                \"baudrate\": 250000,
-                \"autoconnect\": true}";
-if ($_POST["connect"] == "no") {
-    $post_field = "{\"command\": \"disconnect\",
-                    \"autoconnect\": true}";
-}
-
-//echo json_encode($_POST["connect"]);
-
 $curl = curl_init();
 
+if ($_POST["multiple"] == "no"){
+    $post_field = "{\"command\":\"".$_POST["command"]."\"}";
+} else {
+    $post_field = "{\"commands\":[".$_POST["command"]."]}";
+}
+
+
 curl_setopt_array($curl, array(
-    CURLOPT_URL => "http://localhost:5001/api/connection",
+    CURLOPT_URL => "http://localhost:5001/api/printer/command",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
