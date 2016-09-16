@@ -41,6 +41,7 @@ $(document).ready(function () {
     const API_KEY = 'raionpi';
     const DEF_DISTANCE = 10;
     const DEF_MULTIPLIER = 1;
+    const DEF_FEEDRATE = 100;
 
     const MAX_TEMP_BED = 100;
     const MAX_TEMP_TOOL = 265;
@@ -159,7 +160,7 @@ $(document).ready(function () {
             url: "src/php/connection.php",
             data: data
         }).done(function (data) {
-            console.log("connect OK. homing...");
+            // console.log("connect OK. homing...");
             //go home after connection
             if (connect) {
                 $("#jog_xyhome").click();
@@ -233,21 +234,48 @@ $(document).ready(function () {
         var distance = getSelectedJogDistance();
         if (typeof distance === "undefined")
             distance = DEF_DISTANCE;
-        var data = {
-            "command": "jog"
-        };
+        var data = {"command": "jog"};
         var diff = distance * multiplier;
-        data[axis] = diff;
+        data["axe"] = axis;
+        data["dist"] = diff;
         updateAxisPos(axis, diff);
-        self.sendPrintHeadCommand(data);
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
+        });
     };
 
-    self.sendHomeCommand = function (axis) {
-        self.sendPrintHeadCommand({
-            "command": "home",
-            "axes": axis
+    self.sendFeedrateCommand = function (feedrate) {
+        if (typeof feedrate === "undefined")
+            feedrate = DEF_FEEDRATE;
+        var data = {"command": "feedrate"};
+        data["feedrate"] = feedrate;
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
         });
-        updateAxisPos(axis, 0)
+    };
+
+    self.sendHomeCommand = function (input) {
+        var axehome;
+        switch (axehome) {
+            case "xy":
+                axehome = '["x", "y"]';
+                break;
+            case "z":
+                axehome = '["z"]';
+                break;
+        }
+        var data = {"command": "home"};
+        data["axehome"] = axehome;
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
+        });
+        updateAxisPos(input, 0)
     };
 
     self.updateFilesTable = function (data) {
@@ -413,7 +441,7 @@ $(document).ready(function () {
             temp_bed_target = "OFF";
             $("#temp_bed_target").html("OFF");
             self.sendTempSet("bed", 0);
-        } else if ($.isNumeric(parseInt(input))) {
+        } else if (parseInt(input) >= 0) {
             if (parseInt(input) <= MAX_TEMP_BED) {
                 $("#control_temp_bed_target").val(parseInt(input));
                 temp_bed_target = parseInt(input);
@@ -439,12 +467,13 @@ $(document).ready(function () {
 
     $("#control_temp_tool_set").click(function () {
         var input = $("#control_temp_tool_target").val();
+        console.log("test");
         if (input == "OFF") {
             $("#control_temp_tool_target").val("OFF");
             temp_tool_target = "OFF";
             $("#temp_tool_target").html("OFF");
             self.sendTempSet("tool", 0);
-        } else if ($.isNumeric(parseInt(input))) {
+        } else if (parseInt(input) >= 0) {
             if (parseInt(input) <= MAX_TEMP_TOOL) {
                 $("#control_temp_tool_target").val(parseInt(input));
                 temp_tool_target = parseInt(input);
@@ -481,6 +510,9 @@ $(document).ready(function () {
         self.sendTempSet("tool", 0);
         // var tid_get_infoprinter = setInterval(get_infoprinter, 1000);
     });
+
+
+
 
     self.sendGcodeCommand = function (command) {
         $.post({

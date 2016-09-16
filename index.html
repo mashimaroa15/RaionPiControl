@@ -396,7 +396,7 @@
                                 <label>Plateau</label>
                                 <div class="input-group width95">
                                     <input type="number" class="form-control" id="control_temp_bed_target"
-                                           placeholder="OFF">
+                                           min="0" step="1" placeholder="OFF">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary"
                                                 id="control_temp_bed_set">Set</button>
@@ -407,12 +407,23 @@
                                 <label>Tête d'impression</label>
                                 <div class="input-group width95">
                                     <input type="number" class="form-control" id="control_temp_tool_target"
-                                           placeholder="OFF">
+                                           min="0" step="1" placeholder="OFF">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary"
                                                 id="control_temp_tool_set">Set</button>
                                         <button type="button" class="btn btn-warning"
                                                 id="control_temp_tool_off">Off</button>
+                                    </span>
+                                </div>
+                                <label>Vitesse d'impression % (Feedrate)</label>
+                                <div class="input-group width95">
+                                    <input type="number" class="form-control" id="control_feedrate_target"
+                                           min="50" max="200" step="5" placeholder="100">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_feedrate_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_feedrate_reset">Reset</button>
                                     </span>
                                 </div>
                             </div>
