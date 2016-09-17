@@ -21,8 +21,10 @@ switch ($cmd) {
         $post_field = '{"command": "home",'.
                         '"axes":'.$axehome.
                         '}';
+        break;
 }
 
+//echo json_encode($post_field);
 $curl = curl_init();
 
 curl_setopt_array($curl, array(

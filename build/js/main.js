@@ -42,6 +42,7 @@ $(document).ready(function () {
     const DEF_DISTANCE = 10;
     const DEF_MULTIPLIER = 1;
     const DEF_FEEDRATE = 100;
+    const DEF_FLOW = 100;
 
     const MAX_TEMP_BED = 100;
     const MAX_TEMP_TOOL = 265;
@@ -258,14 +259,25 @@ $(document).ready(function () {
         });
     };
 
+    self.sendFlowCommand = function (flow) {
+        if (typeof flow === "undefined")
+            flow = DEF_FLOW;
+        var data = {"flow": flow};
+        $.post({
+            url: "src/php/printer.tool.php",
+            dataType: "json",
+            data: data
+        });
+    };
+
     self.sendHomeCommand = function (input) {
         var axehome;
-        switch (axehome) {
+        switch (input) {
             case "xy":
                 axehome = '["x", "y"]';
                 break;
             case "z":
-                axehome = '["z"]';
+                axehome = '"z"';
                 break;
         }
         var data = {"command": "home"};
@@ -467,7 +479,7 @@ $(document).ready(function () {
 
     $("#control_temp_tool_set").click(function () {
         var input = $("#control_temp_tool_target").val();
-        console.log("test");
+        // console.log("test");
         if (input == "OFF") {
             $("#control_temp_tool_target").val("OFF");
             temp_tool_target = "OFF";
@@ -512,7 +524,23 @@ $(document).ready(function () {
     });
 
 
+    $("#control_feedrate_set").click(function () {
+        var input = $("#control_feedrate_target").val();
+        self.sendFeedrateCommand(parseInt(input));
+    });
 
+    $("#control_feedrate_reset").click(function () {
+        self.sendFeedrateCommand(100);
+    });
+
+    $("#control_flow_set").click(function () {
+        var input = $("#control_flow_target").val();
+        self.sendFlowCommand(parseInt(input));
+    });
+
+    $("#control_flow_reset").click(function () {
+        self.sendFlowCommand(100);
+    });
 
     self.sendGcodeCommand = function (command) {
         $.post({

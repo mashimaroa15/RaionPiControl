@@ -418,12 +418,23 @@
                                 <label>Vitesse d'impression % (Feedrate)</label>
                                 <div class="input-group width95">
                                     <input type="number" class="form-control" id="control_feedrate_target"
-                                           min="50" max="200" step="5" placeholder="100">
+                                           min="50" max="200" step="5" value="100" placeholder="100">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary"
                                                 id="control_feedrate_set">Set</button>
                                         <button type="button" class="btn btn-warning"
                                                 id="control_feedrate_reset">Reset</button>
+                                    </span>
+                                </div>
+                                <label>Taux du flux %</label>
+                                <div class="input-group width95">
+                                    <input type="number" class="form-control" id="control_flow_target"
+                                           min="75" max="125" step="5" value="100" placeholder="100">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_flow_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_flow_reset">Reset</button>
                                     </span>
                                 </div>
                             </div>
