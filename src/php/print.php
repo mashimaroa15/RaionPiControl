@@ -2,10 +2,6 @@
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-//$inputJSON = file_get_contents('php://input');
-//$input= json_decode($inputJSON, TRUE );
-
-//$filename = $input["filename"];
 $filename = $_POST["filename"];
 $url_dest = "http://localhost:5001/api/files/local/".$filename;
 
@@ -37,4 +33,3 @@ if ($err) {
 } else {
     echo $response;
 }
-?>

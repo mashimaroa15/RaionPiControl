@@ -22,6 +22,16 @@ case $choice in
 		echo Sync completed !
 		date
         ;;
+	all ) echo "Syncing $choice ..."
+		echo "Syncing raion 1 ..."
+		rsync -e "ssh -i C:/Users/kennysang/.ssh/key_raion1" -avz --delete-after ./* pi@10.8.0.3:/var/www/html/
+		# echo "Syncing raion 2 ..."
+		# rsync -e "ssh -i C:/Users/kennysang/.ssh/key_raion2" -avz --delete-after ./* pi@10.8.0.4:/var/www/html/
+		echo "Syncing raion touch ..."
+		rsync -e "ssh -i C:/Users/kennysang/.ssh/key_raion3" -avz --delete-after ./* pi@10.8.0.2:/var/www/html/
+		echo Sync completed !
+		date
+        ;;
     * ) echo "Usage : "
         echo "./update.sh [number of raionpi]"
 esac

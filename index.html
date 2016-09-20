@@ -69,6 +69,8 @@
                             </li>
                             <li><a>Paramètres</a>
                             </li>
+                            <li><a>Info système</a>
+                            </li>
                             <li><a>Mise à jour</a>
                             </li>
                             <li><a href="javascript:location.reload(true);" id="userid">Refresh</a>
@@ -154,9 +156,31 @@
                                     <button id="turnon" type="button" class="btn btn-success" style="padding: 1px 6px;">
                                         ON
                                     </button>
-                                    <button id="turnoff" type="button" class="btn btn-danger" style="padding: 1px 6px;">
+                                    <button id="turnoff" type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-sm" style="padding: 1px 6px;">
                                         OFF
                                     </button>
+                                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog modal-sm">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="myModalLabel2">Modal title</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h4>Text in a modal</h4>
+                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </a>
                         </li>
@@ -183,13 +207,17 @@
                             <ul class="nav navbar-right panel_toolbox" id="temp_title_stats" style="display:none;
                                                         min-width: 0; padding-top: 3px">
                                 <li>
-                                    <span id="temp_bed_actual_title" style="color: #7b4d73; font-weight: normal">tmp</span>/
-                                    <span id="temp_bed_target_title" style="color: #1ABB9C; font-weight: normal">goal</span>
+                                    <span id="temp_bed_actual_title"
+                                          style="color: #7b4d73; font-weight: normal">tmp</span>/
+                                    <span id="temp_bed_target_title"
+                                          style="color: #1ABB9C; font-weight: normal">goal</span>
                                     <span>&nbsp;</span>
                                 </li>
                                 <li>
-                                    <span id="temp_tool_actual_title" style="color: #7b4d73; font-weight: normal">tmp</span>/
-                                    <span id="temp_tool_target_title" style="color: #1ABB9C; font-weight: normal">/goal</span>
+                                    <span id="temp_tool_actual_title"
+                                          style="color: #7b4d73; font-weight: normal">tmp</span>/
+                                    <span id="temp_tool_target_title"
+                                          style="color: #1ABB9C; font-weight: normal">/goal</span>
                                     <span>&nbsp;</span>
                                 </li>
                             </ul>
@@ -227,14 +255,21 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
-                            <button type="button" class="btn btn-default" id="connection">
-                                <span id="connection-btn-text">Déconnecter</span>
-                            </button>
-                            <button type="button" class="btn btn-default" id="job_cancel" style="display: none">
-                                <span>Cancel</span>
-                            </button>
-                            <h5>Carte SD : <span class="info" id="sd_ready">N/A</span></h5>
-                            <h5>Fichier choisi : <span class="info" id="file_selected">N/A</span></h5>
+                            <div>
+                                <button type="button" class="btn btn-default btn-primary" id="connection">
+                                    <span id="connection-btn-text">Déconnecter</span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-warning disabled status_job" id="job_pause">
+                                    <span>Pause</span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-danger disabled status_job" id="job_cancel">
+                                    <span>Annuler</span>
+                                </button>
+                            </div>
+                            <div>
+                                <h5>Carte SD : <span class="info" id="sd_ready">N/A</span></h5>
+                                <h5>Fichier choisi : <span class="info" id="file_selected">N/A</span></h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -360,8 +395,8 @@
                                 <h4>Température cible</h4>
                                 <label>Plateau</label>
                                 <div class="input-group width95">
-                                    <input type="text" class="form-control" id="control_temp_bed_target"
-                                           placeholder="OFF">
+                                    <input type="number" class="form-control" id="control_temp_bed_target"
+                                           min="0" step="1" placeholder="OFF">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary"
                                                 id="control_temp_bed_set">Set</button>
@@ -371,8 +406,8 @@
                                 </div>
                                 <label>Tête d'impression</label>
                                 <div class="input-group width95">
-                                    <input type="text" class="form-control" id="control_temp_tool_target"
-                                           placeholder="OFF">
+                                    <input type="number" class="form-control" id="control_temp_tool_target"
+                                           min="0" step="1" placeholder="OFF">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary"
                                                 id="control_temp_tool_set">Set</button>
@@ -380,10 +415,45 @@
                                                 id="control_temp_tool_off">Off</button>
                                     </span>
                                 </div>
+                                <label>Vitesse d'impression % (Feedrate)</label>
+                                <div class="input-group width95">
+                                    <input type="number" class="form-control" id="control_feedrate_target"
+                                           min="50" max="200" step="5" value="100" placeholder="100">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_feedrate_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_feedrate_reset">Reset</button>
+                                    </span>
+                                </div>
+                                <label>Taux du flux %</label>
+                                <div class="input-group width95">
+                                    <input type="number" class="form-control" id="control_flow_target"
+                                           min="75" max="125" step="5" value="100" placeholder="100">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary"
+                                                id="control_flow_set">Set</button>
+                                        <button type="button" class="btn btn-warning"
+                                                id="control_flow_reset">Reset</button>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-xs-5 no-padding">
                                 <h4>Outils</h4>
-
+                                <div>
+                                    <button type="button" class="btn btn-default btn-success" id="fan_on" style="width: 100px;">Fan ON
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-warning" id="fan_off" style="width: 100px;">Fan OFF
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-warning" id="motors_off" style="width: 100px;">Motors OFF
+                                    </button>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-default btn-primary" id="extrude" style="width: 100px;">Extrude
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-primary" id="retract" style="width: 100px;">Retract
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -421,7 +491,7 @@
                     </div>
                 </div>
                 <div class="x_content">
-                    <a class="btn btn-app" id="file_select_print_btn">
+                    <a class="btn btn-app file_print" id="file_select_print_btn">
                         <i class="fa fa-print blue"></i>
                         Print
                     </a>
@@ -429,10 +499,10 @@
                         <i class="fa fa-refresh purple"></i>
                         Refresh
                     </a>
-                    <!--<a class="btn btn-app" id="file_upload_btn">-->
-                    <!--<i class="fa fa-upload green"></i>-->
-                    <!--Upload-->
-                    <!--</a>-->
+                    <a class="btn btn-app" id="file_upload_btn">
+                    <i class="fa fa-upload green"></i>
+                    Upload
+                    </a>
                 </div>
             </div>
             <!--/file-->
