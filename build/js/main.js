@@ -3,28 +3,57 @@ $(document).ready(function () {
     var self = this;
 
     //var current_url = "http://192.168.1.69:5001/"; // for test local only
+    var touchscreen;
     var current_url = window.location.href; //http://monitoring.3draion.com/raion1/   ---- with slash !!!
-    var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
-    var html_url_webcam = '<img src="' + current_url_trim + '/stream/?action=stream" alt="Chargement du flux webcam..." ' +
-        'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
-    //apply changes to html document
-    $("#webcam").html(html_url_webcam);
-    $("#surveillance-refresh").click(function () {
+    console.log(current_url);
+    //test if this is for touchscreen
+    if (current_url.indexOf("localhost") !== -1) {
+        touchscreen = true;
+        $("#userid").append(" (touchscreen)");
+    }
+    //var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
+    var url_webcam_touchscreen = current_url + ":8080/";
+    // var url_webcam_normalscreen = "http://10.8.0.2:8080/";
+    var html_url_webcam;
+    if (touchscreen) {
+        html_url_webcam = '<img src="' + url_webcam_touchscreen + '?action=stream" alt="Chargement du flux webcam..." ' +
+            'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+        $("#card_monitor").hide();
+        $("#collapse_temperature").click();
+        $("#collapse_status").click();
+        $("#temp_title_stats").show();
+    } else {
+        html_url_webcam = '<img src="' + current_url + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
+            'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
         $("#webcam").html(html_url_webcam);
-    });
+        $("#surveillance-refresh").click(function () {
+            $("#webcam").html(html_url_webcam);
+        });
+    }
 
     var btn_on_off = $("[name='on_off']");
     btn_on_off.bootstrapSwitch();
     btn_on_off.removeClass("bootstrap-switch bootstrap-switch-mini");
 
     //const API_BASEURL = current_url + 'api/'; // for test local only
-    const API_BASEURL = current_url + 'control/api/';
+    //const API_BASEURL = current_url + 'control/api/';  //for online
+    const API_BASEURL = current_url + 'api/';   //for touchscreen
     const API_KEY = 'raionpi';
     const DEF_DISTANCE = 10;
     const DEF_MULTIPLIER = 1;
+    const DEF_FEEDRATE = 100;
+    const DEF_FLOW = 100;
 
     const MAX_TEMP_BED = 100;
     const MAX_TEMP_TOOL = 265;
+
+    const FAN_ON = "M106";
+    const FAN_OFF = "M107";
+    const MOTORS_OFF = "M84";
+    const HOME_XYZ = "G28";
+
+    const DEF_EXTRUDE_LENGTH = 0.1;
+    const DEF_EXTRUDE_SPEED = 200;
 
     var distance = DEF_DISTANCE;
     var multiplier = DEF_MULTIPLIER;
@@ -58,22 +87,33 @@ $(document).ready(function () {
         $(".info").html("N/A");
     }
 
-    // function changeSwitcheryState(el, value) {
-    //     if ($(el).is(':checked') != value) {
-    //         $(el).trigger("click")
-    //     }
-    // }
-
     self.updatePrinterCommand = function (responseAjax, operational) {
         info_printer = responseAjax;
         //verify if the machine is connected
         if (!operational) {
             connected = false;
+            $(".status_job").addClass("disabled");
+            $(".file_print").addClass("disabled");
             $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
             $("#connection-btn-text").html(" Connecter");
             resetView();
         } else {
             connected = true;
+            //test if printing - paused - canceled
+            if (info_printer.state.flags.printing) { //printing
+                $(".status_job").removeClass("disabled");
+                $("#job_pause").html("Pause");
+                $(".file_print").addClass("disabled");
+            } else if (info_printer.state.flags.paused) {  //paused
+                $("#job_pause").html("Résumer");
+                $(".status_job").removeClass("disabled");
+                $(".file_print").addClass("disabled");
+            } else { //nothing or canceled
+                $("#job_pause").html("Pause");
+                $(".status_job").addClass("disabled");
+                $(".file_print").removeClass("disabled");
+            }
+
             $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
             $("#connection-btn-text").html("Déconnecter");
             temp_bed_actual = info_printer.temperature.bed.actual;
@@ -91,12 +131,16 @@ $(document).ready(function () {
             sd_ready = info_printer.sd.ready;
 
             $("#temp_bed_actual").html(temp_bed_actual);
+            $("#temp_bed_actual_title").html(temp_bed_actual);
             $("#temp_bed_target").html(temp_bed_target);
+            $("#temp_bed_target_title").html(temp_bed_target);
             $("#temp_tool_actual").html(temp_tool_actual);
+            $("#temp_tool_actual_title").html(temp_tool_actual);
             $("#temp_tool_target").html(temp_tool_target);
+            $("#temp_tool_target_title").html(temp_tool_target);
 
-            $("#control_temp_bed_target").attr("placeholder",temp_bed_target);
-            $("#control_temp_tool_target").attr("placeholder",temp_tool_target);
+            $("#control_temp_bed_target").attr("placeholder", temp_bed_target);
+            $("#control_temp_tool_target").attr("placeholder", temp_tool_target);
 
             if (sd_ready) {
                 $("#sd_ready").html("Prêt");
@@ -107,25 +151,22 @@ $(document).ready(function () {
     };
 
     self.sendConnectCommand = function (connect) {
+        var data;
         if (connect) {
-            var data = {
-                "command": "connect",
-                "autoconnect": true
-            };
+            data = {"connect": "yes"};
         } else {
-            var data = {
-                "command": "disconnect",
-                "autoconnect": true
-            };
+            data = {"connect": "no"};
         }
         $.post({
-            url: API_BASEURL + "connection",
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(data)
+            url: "src/php/connection.php",
+            data: data
+        }).done(function (data) {
+            // console.log("connect OK. homing...");
+            //go home after connection
+            if (connect) {
+                $("#jog_xyhome").click();
+                $("#jog_zhome").click();
+            }
         });
     };
 
@@ -143,27 +184,18 @@ $(document).ready(function () {
 
     self.sendPrinterCommand = function () {
         $.get({
-            // url: API_BASEURL + "printer",
-            url: "index2.php",
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8"
+            url: "src/php/printer.php",
+            dataType: "json"
         }).done(function (data) {
             self.updatePrinterCommand(data, true);
         }).fail(function (data) {
             self.updatePrinterCommand(data, false);
-            console.log("Fail to execute getFilesCommand");
         });
     };
 
     self.sendPrintHeadCommand = function (data) {
         $.post({
-            url: API_BASEURL + "printer/printhead",
-            headers: {
-                "X-Api-Key": API_KEY
-            },
+            url: "src/php/printer.printhead.php",
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
@@ -194,29 +226,73 @@ $(document).ready(function () {
         $("#z_pos").html(z_pos);
     }
 
-    self.sendJogCommand = function (axis, multiplier, distance) {
+    function getSelectedJogDistance() {
+        var selected_dist = $("label[class='btn btn-default active']").children().val();
+        return parseFloat(selected_dist);
+    }
+
+    self.sendJogCommand = function (axis, multiplier) {
+        var distance = getSelectedJogDistance();
         if (typeof distance === "undefined")
             distance = DEF_DISTANCE;
-        var data = {
-            "command": "jog"
-        };
+        var data = {"command": "jog"};
         var diff = distance * multiplier;
-        data[axis] = diff;
+        data["axe"] = axis;
+        data["dist"] = diff;
         updateAxisPos(axis, diff);
-        self.sendPrintHeadCommand(data);
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
+        });
     };
 
-    self.sendHomeCommand = function (axis) {
-        self.sendPrintHeadCommand({
-            "command": "home",
-            "axes": axis
+    self.sendFeedrateCommand = function (feedrate) {
+        if (typeof feedrate === "undefined")
+            feedrate = DEF_FEEDRATE;
+        var data = {"command": "feedrate"};
+        data["feedrate"] = feedrate;
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
         });
-        updateAxisPos(axis, 0)
+    };
+
+    self.sendFlowCommand = function (flow) {
+        if (typeof flow === "undefined")
+            flow = DEF_FLOW;
+        var data = {"flow": flow};
+        $.post({
+            url: "src/php/printer.tool.php",
+            dataType: "json",
+            data: data
+        });
+    };
+
+    self.sendHomeCommand = function (input) {
+        var axehome;
+        switch (input) {
+            case "xy":
+                axehome = '["x", "y"]';
+                break;
+            case "z":
+                axehome = '"z"';
+                break;
+        }
+        var data = {"command": "home"};
+        data["axehome"] = axehome;
+        $.post({
+            url: "src/php/printer.printhead.php",
+            dataType: "json",
+            data: data
+        });
+        updateAxisPos(input, 0)
     };
 
     self.updateFilesTable = function (data) {
         $("#file_table").html(""); // clear the table
-        data.files.forEach(function (item, idex) {
+        data.files.forEach(function (item, index) {
             //var name = item.name.slice(0, item.name.length-6); //remove .gcode
             var name = item.name;
             var _date = new Date(item.date * 1000);
@@ -227,7 +303,7 @@ $(document).ready(function () {
             size += " KB";
             var estTime;
             var estFilament;
-            if (typeof (item.gcodeAnalysis) !== undefined) {
+            if (typeof (item.gcodeAnalysis) !== 'undefined') {
                 estTime = item.gcodeAnalysis.estimatedPrintTime / 60;
                 estTime = Math.round(estTime);
                 estTime += " min.";
@@ -235,9 +311,9 @@ $(document).ready(function () {
                 estFilament = Math.round(estFilament);
                 estFilament += " m";
             } else {
-                estTime = "N/A";
-                estFilament = "N/A"
-            };
+                estTime = "n/a";
+                estFilament = "n/a"
+            }
 
             $("#file_table").append(
                 "<tr>" +
@@ -255,12 +331,8 @@ $(document).ready(function () {
 
     self.getFilesCommand = function () {
         $.get({
-            url: API_BASEURL + "files/local",
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8"
+            url: "src/php/files.php",
+            dataType: "json"
         }).done(function (data) {
             self.updateFilesTable(data);
         }).fail(function (data) {
@@ -269,37 +341,32 @@ $(document).ready(function () {
     };
 
     self.selectPrintCommand = function (filename, print) {
-        var data = {
-            "command": "select",
-            "print": print
-        };
         $.post({
-            url: API_BASEURL + "files/local/" + filename,
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(data)
+            url: "src/php/print.php",
+            data: {"filename": filename},
+            dataType: "json"
         }).done(function (data) {
             self.getOneFileInfo(filename);
         });
     };
 
     self.sendJobCancel = function () {
-        var data = {
-            "command": "cancel"
-        };
         $.post({
-            url: API_BASEURL + "job",
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(data)
+            url: "src/php/job.php",
+            data: {"command": "cancel"},
+            // dataType: "json"
         }).done(function (data) {
             console.log("cancel OK")
+        });
+    };
+
+    self.sendJobPause = function () {
+        $.post({
+            url: "src/php/job.php",
+            data: {"command": "pause"},
+            dataType: "json"
+        }).done(function (data) {
+            console.log("pause OK")
         });
     };
 
@@ -311,27 +378,26 @@ $(document).ready(function () {
     };
 
     self.getOneFileInfo = function (filename) {
-        $.get({
-            url: API_BASEURL + "files/local/" + filename,
-            headers: {
-                "X-Api-Key": API_KEY
-            },
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8"
+        $.post({
+            url: "src/php/getOneFileInfo.php",
+            data: {"filename": filename},
+            dataType: "json"
         }).done(function (data) {
             self.updateSelectedFile(data);
         }).fail(function (data) {
-            console.log("Fail to execute getFilesCommand");
+            console.log("Fail to execute getOneFileInfo");
         });
     };
 
     self.sendTempSet = function (type, temp) {
         var data;
+        var url_dest;
         if (type == "bed") {
             data = {
                 "command": "target",
                 "target": temp
             };
+            url_dest = "src/php/printer.setTempBed.php";
         } else {
             data = {
                 "command": "target",
@@ -339,31 +405,30 @@ $(document).ready(function () {
                     "tool0": temp
                 }
             };
-        };
+            url_dest = "src/php/printer.setTempTool.php";
+        }
         $.post({
-            url: API_BASEURL + "printer/" + type,
-            headers: {
-                "X-Api-Key": API_KEY
-            },
+            url: url_dest,
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(data)
         }).done(function (data) {
-            var log = "set temp OK : " + type + " to " + temp;
-            console.log(log)
+            console.log(data);
         });
     };
 
-    function goToByScroll(id){
-        $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+    function goToByScroll(id) {
+        $('html,body').animate({scrollTop: $("#" + id).offset().top}, 'slow');
     }
 
     $("#file_select_print_btn").click(function () {
         goToByScroll("first_row");
-        $("#job_cancel").css("display","inline-block");
+        // $("#job_cancel").css("display", "inline-block");
+        $("#job_cancel").removeClass("disabled");
+        $("#job_pause").removeClass("disabled");
         var selected_file = $("input:radio[name='file_radiobutton_group']:checked").val();
         self.selectPrintCommand(selected_file, true);
-        $("#file_select_print_btn").attr("disabled", "");
+        $("#file_select_print_btn").addClass("disabled");
     });
 
     $("#file_refresh_btn").click(function () {
@@ -372,20 +437,24 @@ $(document).ready(function () {
 
     $("#job_cancel").click(function () {
         self.sendJobCancel();
-        $("#job_cancel").css("display","none");
-        $("#file_select_print_btn").removeAttr("disabled");
+        $("#job_cancel").addClass("disabled");
+        $("#file_select_print_btn").removeClass("disabled");
+    });
+
+    $("#job_pause").click(function () {
+        self.sendJobPause();
+        $("#job_pause").html("Résumer");
     });
 
     $("#control_temp_bed_set").click(function () {
         var input = $("#control_temp_bed_target").val();
-        console.log(input);
         if (input == "OFF") {
             $("#control_temp_bed_target").val("OFF");
             temp_bed_target = "OFF";
             $("#temp_bed_target").html("OFF");
-            self.sendTempSet("bed",0);
-        } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_BED) {
+            self.sendTempSet("bed", 0);
+        } else if (parseInt(input) >= 0) {
+            if (parseInt(input) <= MAX_TEMP_BED) {
                 $("#control_temp_bed_target").val(parseInt(input));
                 temp_bed_target = parseInt(input);
                 $("#temp_bed_target").html(parseInt(input));
@@ -410,14 +479,14 @@ $(document).ready(function () {
 
     $("#control_temp_tool_set").click(function () {
         var input = $("#control_temp_tool_target").val();
-        console.log(input);
+        // console.log("test");
         if (input == "OFF") {
             $("#control_temp_tool_target").val("OFF");
             temp_tool_target = "OFF";
             $("#temp_tool_target").html("OFF");
-            self.sendTempSet("tool",0);
-        } else if ($.isNumeric(parseInt(input))) {
-            if(parseInt(input) <= MAX_TEMP_TOOL) {
+            self.sendTempSet("tool", 0);
+        } else if (parseInt(input) >= 0) {
+            if (parseInt(input) <= MAX_TEMP_TOOL) {
                 $("#control_temp_tool_target").val(parseInt(input));
                 temp_tool_target = parseInt(input);
                 $("#temp_tool_target").html(parseInt(input));
@@ -443,14 +512,85 @@ $(document).ready(function () {
     $("#control_temp_bed_off").click(function () {
         $("#control_temp_bed_target").val("OFF");
         $("#temp_bed_target").html("OFF");
-        self.sendTempSet("bed",0);
+        self.sendTempSet("bed", 0);
     });
 
     $("#control_temp_tool_off").click(function () {
         $("#control_temp_tool_target").val("OFF");
         $("#temp_tool_target").html("OFF");
-        self.sendTempSet("tool",0);
-    })
+        // abortTimer();
+        self.sendTempSet("tool", 0);
+        // var tid_get_infoprinter = setInterval(get_infoprinter, 1000);
+    });
+
+
+    $("#control_feedrate_set").click(function () {
+        var input = $("#control_feedrate_target").val();
+        self.sendFeedrateCommand(parseInt(input));
+    });
+
+    $("#control_feedrate_reset").click(function () {
+        self.sendFeedrateCommand(100);
+    });
+
+    $("#control_flow_set").click(function () {
+        var input = $("#control_flow_target").val();
+        self.sendFlowCommand(parseInt(input));
+    });
+
+    $("#control_flow_reset").click(function () {
+        self.sendFlowCommand(100);
+    });
+
+    self.sendGcodeCommand = function (command) {
+        $.post({
+            url: "src/php/customGcodeCommand.php",
+            dataType: "json",
+            data: {"multiple": "no","command": command}
+        });
+    };
+
+    self.sendGcodeMultipleCommand = function (command) {
+        $.post({
+            url: "src/php/customGcodeCommand.php",
+            dataType: "json",
+            data: {"multiple": "yes","command": command}
+        });
+    };
+
+    $("#fan_on").click(function () {
+        self.sendGcodeCommand(FAN_ON);
+    });
+
+    $("#fan_off").click(function () {
+        self.sendGcodeCommand(FAN_OFF);
+    });
+
+    $("#motors_off").click(function () {
+        self.sendGcodeCommand(MOTORS_OFF);
+    });
+
+    $("#extrude").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E10 F200"');
+        }
+    });
 
 
     /* Init first time load page */
@@ -459,20 +599,14 @@ $(document).ready(function () {
 
     /* Loop Functions */
     // set interval
-    var tid_get_infoprinter = setInterval(get_infoprinter, 2000);
-    // var tid_get_files = setInterval(get_files, 10000);
+    var tid_get_infoprinter = setInterval(get_infoprinter, 1000);
 
     function get_infoprinter() {
         self.sendPrinterCommand();
     }
 
-    // function get_files() {
-    //     self.getFilesCommand();
-    // }
-
     function abortTimer() { // to be called when you want to stop the timer
         clearInterval(tid_get_infoprinter);
-        // clearInterval(tid_get_files);
     }
 
     // Turn on/off
@@ -497,36 +631,34 @@ $(document).ready(function () {
 
     // JOG PANEL
 
-    $("#control_collapse").click(function () {
-        if($(".control_title_btn").css("display") == "none") {
-            $(".control_title_btn").css("display","inline-block")
+    $("#collapse_control").click(function () {
+        if ($(".control_title_btn").css("display") == "none") {
+            $(".control_title_btn").css("display", "inline-block")
         } else {
-            $(".control_title_btn").css("display","none")
+            $(".control_title_btn").css("display", "none")
         }
     });
 
-    distance = 10;
-
     $("#jog_xinc").click(function () {
-        self.sendJogCommand("x", multiplier * -1, distance)
-});
+        self.sendJogCommand("x", multiplier * -1)
+    });
     $("#jog_xdec").click(function () {
-        self.sendJogCommand("x", multiplier, distance)
+        self.sendJogCommand("x", multiplier)
     });
     $("#jog_yinc").click(function () {
-        self.sendJogCommand("y", multiplier * -1, distance)
+        self.sendJogCommand("y", multiplier * -1)
     });
     $("#jog_ydec").click(function () {
-        self.sendJogCommand("y", multiplier, distance)
+        self.sendJogCommand("y", multiplier)
     });
     $(".jog_xyhome").click(function () {
         self.sendHomeCommand("xy")
     });
     $("#jog_zup").click(function () {
-        self.sendJogCommand("z", multiplier * -1, distance)
+        self.sendJogCommand("z", multiplier * -1)
     });
     $("#jog_zdown").click(function () {
-        self.sendJogCommand("z", multiplier, distance)
+        self.sendJogCommand("z", multiplier)
     });
     $(".jog_zhome").click(function () {
         self.sendHomeCommand("z")
