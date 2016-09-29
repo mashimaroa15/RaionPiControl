@@ -340,6 +340,19 @@ $(document).ready(function () {
         });
     };
 
+    self.deleteFileCommand = function (filename) {
+        console.log(filename);
+        $.post({
+            url: "src/php/files.php",
+            data: {"filename":filename},
+            dataType: "json"
+        }).done(function (data) {
+            self.getFilesCommand();
+        }).fail(function (data) {
+            console.log("Fail to execute deleteFileCommand");
+        });
+    };
+
     self.selectPrintCommand = function (filename, print) {
         $.post({
             url: "src/php/print.php",
@@ -433,6 +446,11 @@ $(document).ready(function () {
 
     $("#file_refresh_btn").click(function () {
         self.getFilesCommand();
+    });
+
+    $("#file_delete_btn").click(function () {
+        var selected_file = $("input:radio[name='file_radiobutton_group']:checked").val();
+        self.deleteFileCommand(selected_file);
     });
 
     $("#job_cancel").click(function () {
@@ -591,6 +609,53 @@ $(document).ready(function () {
             self.sendGcodeMultipleCommand('"G92 E0", "G1 E10 F200"');
         }
     });
+
+
+    var _submit = document.getElementById('_submit'),
+        _file = document.getElementById('_file'),
+        _progress = document.getElementById('_progress');
+
+    var upload = function(){
+
+        if(_file.files.length === 0){
+            return;
+        }
+
+        var data = new FormData();
+        data.append('SelectedFile', _file.files[0]);
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function(){
+            if(request.readyState == 4){
+                try {
+                    var resp = JSON.parse(request.response);
+                } catch (e){
+                    var resp = {
+                        status: 'error',
+                        data: 'Unknown error occurred: [' + request.responseText + ']'
+                    };
+                }
+                self.getFilesCommand();
+                console.log(resp.status + ': ' + resp.data);
+            }
+        };
+
+        request.upload.addEventListener('progress', function(e){
+            var percent = parseInt(e.loaded/e.total * 100)
+            _progress.style.width = percent + '%';
+            $("#_progress").html(percent + '%');
+            if (percent == 100) {
+                $("#_progress").html("Upload terminé");
+                $("#file_refresh_btn").click();
+            }
+        }, false);
+
+        request.open('POST', 'src/php/upload.php');
+        request.send(data);
+    };
+
+    _submit.addEventListener('click', upload);
+
 
 
     /* Init first time load page */
