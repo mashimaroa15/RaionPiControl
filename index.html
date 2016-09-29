@@ -156,25 +156,35 @@
                                     <button id="turnon" type="button" class="btn btn-success" style="padding: 1px 6px;">
                                         ON
                                     </button>
-                                    <button id="turnoff" type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-sm" style="padding: 1px 6px;">
+                                    <button id="turnoff" type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target=".bd-example-modal-sm" style="padding: 1px 6px;">
                                         OFF
                                     </button>
-                                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+                                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+                                         aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog modal-sm">
                                             <div class="modal-content">
 
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span aria-hidden="true">×</span>
                                                     </button>
                                                     <h4 class="modal-title" id="myModalLabel2">Modal title</h4>
                                                 </div>
                                                 <div class="modal-body">
                                                     <h4>Text in a modal</h4>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur
+                                                        et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus
+                                                        dolor auctor.</p>
+                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
+                                                        cursus magna, vel scelerisque nisl consectetur et. Donec sed
+                                                        odio dui. Donec ullamcorper nulla non metus auctor
+                                                        fringilla.</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Close
+                                                    </button>
                                                     <button type="button" class="btn btn-primary">Save changes</button>
                                                 </div>
 
@@ -259,10 +269,12 @@
                                 <button type="button" class="btn btn-default btn-primary" id="connection">
                                     <span id="connection-btn-text">Déconnecter</span>
                                 </button>
-                                <button type="button" class="btn btn-default btn-warning disabled status_job" id="job_pause">
+                                <button type="button" class="btn btn-default btn-warning disabled status_job"
+                                        id="job_pause">
                                     <span>Pause</span>
                                 </button>
-                                <button type="button" class="btn btn-default btn-danger disabled status_job" id="job_cancel">
+                                <button type="button" class="btn btn-default btn-danger disabled status_job"
+                                        id="job_cancel">
                                     <span>Annuler</span>
                                 </button>
                             </div>
@@ -441,17 +453,22 @@
                             <div class="col-xs-5 no-padding">
                                 <h4>Outils</h4>
                                 <div>
-                                    <button type="button" class="btn btn-default btn-success" id="fan_on" style="width: 100px;">Fan ON
+                                    <button type="button" class="btn btn-default btn-success" id="fan_on"
+                                            style="width: 100px;">Fan ON
                                     </button>
-                                    <button type="button" class="btn btn-default btn-warning" id="fan_off" style="width: 100px;">Fan OFF
+                                    <button type="button" class="btn btn-default btn-warning" id="fan_off"
+                                            style="width: 100px;">Fan OFF
                                     </button>
-                                    <button type="button" class="btn btn-default btn-warning" id="motors_off" style="width: 100px;">Motors OFF
+                                    <button type="button" class="btn btn-default btn-warning" id="motors_off"
+                                            style="width: 100px;">Motors OFF
                                     </button>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-default btn-primary" id="extrude" style="width: 100px;">Extrude
+                                    <button type="button" class="btn btn-default btn-primary" id="extrude"
+                                            style="width: 100px;">Extrude
                                     </button>
-                                    <button type="button" class="btn btn-default btn-primary" id="retract" style="width: 100px;">Retract
+                                    <button type="button" class="btn btn-default btn-primary" id="retract"
+                                            style="width: 100px;">Retract
                                     </button>
                                 </div>
                             </div>
@@ -493,16 +510,24 @@
                 <div class="x_content">
                     <a class="btn btn-app file_print" id="file_select_print_btn">
                         <i class="fa fa-print blue"></i>
-                        Print
+                        Imprimer
                     </a>
                     <a class="btn btn-app" id="file_refresh_btn">
                         <i class="fa fa-refresh purple"></i>
-                        Refresh
+                        Rafraîchir
                     </a>
-                    <a class="btn btn-app" id="file_upload_btn">
-                    <i class="fa fa-upload green"></i>
-                    Upload
+                    <a class="btn btn-app" id="file_delete_btn">
+                        <i class="fa fa-remove purple"></i>
+                        Supprimer
                     </a>
+                    <div>
+                        <input type='file' id='_file'> <input type='button' id='_submit' value='Upload'>
+                        <div class='progress_outer' style="border: 1px solid #000; height: 22px; text-align: center">
+                            <div id='_progress' class='progress' style="width: 0%; background: #DEDEDE; height: 20px;">
+                            </div>
+                        </div>
+                        <div id="_upload-message" style="color: red"></div>
+                    </div>
                 </div>
             </div>
             <!--/file-->
