@@ -635,7 +635,7 @@ $(document).ready(function () {
                         data: 'Unknown error occurred: [' + request.responseText + ']'
                     };
                 }
-                self.getFilesCommand();it
+                self.getFilesCommand();
                 console.log(resp.status + ': ' + resp.data);
             }
         };

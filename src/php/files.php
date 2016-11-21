@@ -4,7 +4,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method == 'POST') {
     $filename_to_delete = $_POST['filename'];
-    $path = "/home/pi/.raionpi/uploads/" . $filename_to_delete;
+    $path = "/home/pi/.octoprint/uploads/" . $filename_to_delete;
     unlink($path);
 
     $response = json_encode("Delete ok");

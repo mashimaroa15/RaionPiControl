@@ -8,7 +8,7 @@ function outputJSON($msg, $status = 'error'){
     )));
 }
 
-$dir = "/home/pi/.raionpi/uploads";
+$dir = "/home/pi/.octoprint/uploads";
 //$dir = "/tmp/php";
 $path = $dir."/";
 
