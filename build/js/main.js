@@ -11,7 +11,7 @@ $(document).ready(function () {
         touchscreen = true;
         $("#userid").append(" (touchscreen)");
     }
-    //var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
+    var current_url_trim = current_url.slice(0, current_url.length - 1);  //remove the slash
     var url_webcam_touchscreen = current_url + ":8080/";
     // var url_webcam_normalscreen = "http://10.8.0.2:8080/";
     var html_url_webcam;
@@ -22,6 +22,13 @@ $(document).ready(function () {
         $("#collapse_temperature").click();
         $("#collapse_status").click();
         $("#temp_title_stats").show();
+    } else if (current_url.indexOf("172.24") !== -1) {
+        html_url_webcam = '<img src="' + current_url_trim + ':8080/?action=stream" alt="Chargement du flux webcam..." ' +
+            'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
+        $("#webcam").html(html_url_webcam);
+        $("#surveillance-refresh").click(function () {
+            $("#webcam").html(html_url_webcam);
+        });
     } else {
         html_url_webcam = '<img src="' + current_url + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
@@ -610,6 +617,72 @@ $(document).ready(function () {
         }
     });
 
+    $("#extrude01").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E0.1 F200"');
+        }
+    });
+
+
+    $("#retract").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E-1 F200"');
+        }
+    });
+
+    $("#retract01").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E-0.1 F200"');
+        }
+    });
 
     var _submit = document.getElementById('_submit'),
         _file = document.getElementById('_file'),
@@ -623,6 +696,8 @@ $(document).ready(function () {
 
         var data = new FormData();
         data.append('SelectedFile', _file.files[0]);
+
+        console.log('OK data append');
 
         var request = new XMLHttpRequest();
         request.onreadystatechange = function(){
@@ -692,6 +767,23 @@ $(document).ready(function () {
                 console.log(data);
             });
         }
+    });
+
+    //Lighton/off
+    $('#lighton').on('click', function () {
+        $.ajax({
+            url: 'src/php/lighton.php'
+        }).done(function (data) {
+            console.log(data);
+        });
+    });
+
+    $('#lightoff').on('click', function () {
+        $.ajax({
+            url: 'src/php/lightoff.php'
+        }).done(function (data) {
+            console.log(data);
+        });
     });
 
     // JOG PANEL
