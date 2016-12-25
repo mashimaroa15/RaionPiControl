@@ -657,7 +657,7 @@ $(document).ready(function () {
         } else {
             var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
             console.log(command);
-            self.sendGcodeMultipleCommand('"G92 E0", "G1 E50 F500"');
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E50 F1500"');
         }
     });
 
@@ -724,7 +724,7 @@ $(document).ready(function () {
         } else {
             var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
             console.log(command);
-            self.sendGcodeMultipleCommand('"G92 E0", "G1 E-50 F500"');
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E-50 F1500"');
         }
     });
 
