@@ -135,7 +135,7 @@ $(document).ready(function () {
             } else {
                 temp_tool_target = info_printer.temperature.tool0.target;
             }
-            sd_ready = info_printer.sd.ready;
+            //sd_ready = info_printer.sd.ready;
 
             $("#temp_bed_actual").html(temp_bed_actual);
             $("#temp_bed_actual_title").html(temp_bed_actual);
@@ -149,11 +149,11 @@ $(document).ready(function () {
             $("#control_temp_bed_target").attr("placeholder", temp_bed_target);
             $("#control_temp_tool_target").attr("placeholder", temp_tool_target);
 
-            if (sd_ready) {
-                $("#sd_ready").html("Prêt");
-            } else {
-                $("#sd_ready").html("Pas présente");
-            }
+            // if (sd_ready) {
+            //     $("#sd_ready").html("Prêt");
+            // } else {
+            //     $("#sd_ready").html("Pas présente");
+            // }
         }
     };
 
