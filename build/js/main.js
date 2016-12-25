@@ -613,7 +613,7 @@ $(document).ready(function () {
         } else {
             var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
             console.log(command);
-            self.sendGcodeMultipleCommand('"G92 E0", "G1 E10 F200"');
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E1 F200"');
         }
     });
 
@@ -636,6 +636,28 @@ $(document).ready(function () {
             var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
             console.log(command);
             self.sendGcodeMultipleCommand('"G92 E0", "G1 E0.1 F200"');
+        }
+    });
+
+    $("#extrude50").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E50 F500"');
         }
     });
 
@@ -681,6 +703,28 @@ $(document).ready(function () {
             var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
             console.log(command);
             self.sendGcodeMultipleCommand('"G92 E0", "G1 E-0.1 F200"');
+        }
+    });
+
+    $("#retract50").click(function () {
+        if (temp_tool_target == "OFF") {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez échauffer la tête d\'impression',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else if (temp_tool_actual < temp_tool_target - 2) {
+            new PNotify({
+                title: 'Erreur',
+                text: 'Veuillez attendre que la tête d\'impression s\'échauffe jusqu\'à: ' + temp_tool_target,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        } else {
+            var command = "G1 E" + DEF_EXTRUDE_LENGTH + " F" + DEF_EXTRUDE_SPEED;
+            console.log(command);
+            self.sendGcodeMultipleCommand('"G92 E0", "G1 E-50 F500"');
         }
     });
 
