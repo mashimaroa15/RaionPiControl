@@ -32,15 +32,15 @@ if($_FILES['SelectedFile']['error'] > 0){
 //}
 //
 // Check filetype
-$allowed =  array('gcode','stl');
+$allowed =  array('gcode');
 $filename = $_FILES['SelectedFile']['name'];
 $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if(!in_array($ext,$allowed) ) {
     outputJSON('Unsupported filetype uploaded.');
 }
 
-// Check filesize
-if($_FILES['SelectedFile']['size'] > 20000000){
+// Check filesize (80MB)
+if($_FILES['SelectedFile']['size'] > 80000000){
     outputJSON('File uploaded exceeds maximum upload size.');
 }
 
