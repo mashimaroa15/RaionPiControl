@@ -303,7 +303,8 @@ $(document).ready(function () {
             //var name = item.name.slice(0, item.name.length-6); //remove .gcode
             var name = item.name;
             var _date = new Date(item.date * 1000);
-            var date = _date.getDate() + "/" + _date.getMonth() + "/" + _date.getUTCFullYear();
+            var month=_date.getMonth()+1;
+            var date = _date.getDate() + "/" + month + "/" + _date.getUTCFullYear();
             var time = _date.getHours() + ":" + _date.getMinutes() + ":" + _date.getSeconds();
             var size = item.size / 1024;
             size = Math.round(size);
