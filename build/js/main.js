@@ -29,8 +29,8 @@ $(document).ready(function () {
         $("#surveillance-refresh").click(function () {
             $("#webcam").html(html_url_webcam);
         });
-    } else if (current_url.indexOf("10.8.") !== -1) {
-        console.log("10.8");
+    } else if ((current_url.indexOf("10.8.") !== -1) || (current_url.indexOf("10.8.") !== -1)) {
+        console.log("stream from local");
         html_url_webcam = '<img src="' + current_url_trim + ':8080/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
         $("#webcam").html(html_url_webcam);
