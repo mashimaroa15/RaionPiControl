@@ -46,6 +46,15 @@ $(document).ready(function () {
         });
     }
 
+    var webcam_stt = false;
+    $("surveillance-toggle").click(function () {
+        if (webcam_stt) {
+            $("webcam").html("Surveillance désactivée");
+        } else {
+            $("#webcam").html(html_url_webcam);
+        }
+    });
+
     var btn_on_off = $("[name='on_off']");
     btn_on_off.bootstrapSwitch();
     btn_on_off.removeClass("bootstrap-switch bootstrap-switch-mini");
