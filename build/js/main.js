@@ -25,37 +25,36 @@ $(document).ready(function () {
     } else if (current_url.indexOf("172.24") !== -1) {
         html_url_webcam = '<img src="' + current_url_trim + ':8080/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
-        $("#webcam").html(html_url_webcam);
-        $("#surveillance-refresh").click(function () {
-            $("#webcam").html(html_url_webcam);
-        });
     } else if ((current_url.indexOf("192.168.") !== -1) || (current_url.indexOf("10.8.") !== -1)) {
         console.log("stream from local");
         html_url_webcam = '<img src="' + current_url_trim + ':8080/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
-        $("#webcam").html(html_url_webcam);
-        $("#surveillance-refresh").click(function () {
-            $("#webcam").html(html_url_webcam);
-        });
     } else {
         html_url_webcam = '<img src="' + current_url + 'stream/?action=stream" alt="Chargement du flux webcam..." ' +
             'style="max-width: 100%; max-height: 100%; text-align: center">';  //fit the video into div
-        $("#webcam").html(html_url_webcam);
-        $("#surveillance-refresh").click(function () {
-            $("#webcam").html(html_url_webcam);
-        });
     }
 
     var webcam_stt = false;
+
+    if (webcam_stt) {
+        $("#webcam").html("Surveillance désactivée");
+    } else {
+        $("#webcam").html(html_url_webcam);
+    };
+
     $("#surveillance-toggle").click(function () {
-        console.log("clicked");
+        console.log(webcam_stt);
         if (webcam_stt) {
             $("#webcam").html("Surveillance désactivée");
-            console.log("WC off");
+            console.log("WC now off");
         } else {
             $("#webcam").html(html_url_webcam);
-            console.log("WC on");
+            console.log("WC now on");
         }
+    });
+
+    $("#surveillance-refresh").click(function () {
+        $("#webcam").html(html_url_webcam);
     });
 
     var btn_on_off = $("[name='on_off']");
