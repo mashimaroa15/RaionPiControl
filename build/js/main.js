@@ -50,8 +50,10 @@ $(document).ready(function () {
     $("surveillance-toggle").click(function () {
         if (webcam_stt) {
             $("webcam").html("Surveillance désactivée");
+            console.log("WC off");
         } else {
             $("#webcam").html(html_url_webcam);
+            console.log("WC on");
         }
     });
 
