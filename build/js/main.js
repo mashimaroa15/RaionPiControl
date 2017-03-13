@@ -37,17 +37,19 @@ $(document).ready(function () {
     var webcam_stt = false;
 
     if (webcam_stt) {
-        $("#webcam").html("Surveillance désactivée");
-    } else {
         $("#webcam").html(html_url_webcam);
+    } else {
+        $("#webcam").html("Surveillance désactivée");
     };
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
         if (webcam_stt) {
+            webcam_stt = false;
             $("#webcam").html("Surveillance désactivée");
             console.log("WC now off");
         } else {
+            webcam_stt = true;
             $("#webcam").html(html_url_webcam);
             console.log("WC now on");
         }
