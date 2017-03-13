@@ -48,6 +48,7 @@ $(document).ready(function () {
 
     var webcam_stt = false;
     $("#surveillance-toggle").click(function () {
+        console.log("clicked");
         if (webcam_stt) {
             $("#webcam").html("Surveillance désactivée");
             console.log("WC off");
