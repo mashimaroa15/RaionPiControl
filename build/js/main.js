@@ -47,9 +47,9 @@ $(document).ready(function () {
     }
 
     var webcam_stt = false;
-    $("surveillance-toggle").click(function () {
+    $("#surveillance-toggle").click(function () {
         if (webcam_stt) {
-            $("webcam").html("Surveillance désactivée");
+            $("#webcam").html("Surveillance désactivée");
             console.log("WC off");
         } else {
             $("#webcam").html(html_url_webcam);
