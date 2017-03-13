@@ -47,16 +47,16 @@ $(document).ready(function () {
         if (webcam_stt) {
             webcam_stt = false;
             $("#webcam").html("Surveillance désactivée");
-            console.log("WC now off");
         } else {
             webcam_stt = true;
             $("#webcam").html(html_url_webcam);
-            console.log("WC now on");
         }
     });
 
     $("#surveillance-refresh").click(function () {
-        $("#webcam").html(html_url_webcam);
+        if (webcam_stt) {
+            $("#webcam").html(html_url_webcam);
+        }
     });
 
     var btn_on_off = $("[name='on_off']");
