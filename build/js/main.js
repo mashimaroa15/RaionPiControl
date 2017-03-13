@@ -39,17 +39,20 @@ $(document).ready(function () {
     if (webcam_stt) {
         $("#webcam").html(html_url_webcam);
     } else {
-        $("#webcam").html("Surveillance désactivée");
+        // $("#webcam").html("Surveillance désactivée");
+        $("#webcam").trigger('pause');
     };
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
         if (webcam_stt) {
             webcam_stt = false;
-            $("#webcam").html("Surveillance désactivée");
+            // $("#webcam").html("Surveillance désactivée");
+            $("#webcam").trigger('pause');
         } else {
             webcam_stt = true;
-            $("#webcam").html(html_url_webcam);
+            // $("#webcam").html(html_url_webcam);
+            $("#webcam").trigger('play');
         }
     });
 
