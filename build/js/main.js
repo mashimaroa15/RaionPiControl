@@ -38,20 +38,20 @@ $(document).ready(function () {
 
     // $("#webcam").html("Surveillance désactivée");
     $("#webcam").html(html_url_webcam);
-    $("#webcam").setAttribute("src", "");
+    $("#webcam").attr("src", "");
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
         if (webcam_stt) {
             webcam_stt = false;
             // $("#webcam").html("Surveillance désactivée");
-            $("#webcam").setAttribute("src", "");
+            $("#webcam").attr("src", "");
             // $("#webcam").trigger('pause');
         } else {
             webcam_stt = true;
             // $("#webcam").html(html_url_webcam);
             // $("#webcam").trigger('play');
-            $("#webcam").setAttribute("src", html_url_webcam);
+            $("#webcam").attr("src", html_url_webcam);
         }
     });
 
