@@ -36,12 +36,7 @@ $(document).ready(function () {
 
     var webcam_stt = false;
 
-    if (webcam_stt) {
-        $("#webcam").html(html_url_webcam);
-    } else {
-        // $("#webcam").html("Surveillance désactivée");
-        $("#webcam").trigger('pause');
-    };
+    $("#webcam").html("Surveillance désactivée");
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
@@ -51,7 +46,7 @@ $(document).ready(function () {
             $("#webcam").trigger('pause');
         } else {
             webcam_stt = true;
-            // $("#webcam").html(html_url_webcam);
+            $("#webcam").html(html_url_webcam);
             $("#webcam").trigger('play');
         }
     });
