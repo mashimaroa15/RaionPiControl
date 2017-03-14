@@ -36,22 +36,17 @@ $(document).ready(function () {
 
     var webcam_stt = false;
 
-    // $("#webcam").html("Surveillance désactivée");
-    $("#webcam").html(html_url_webcam);
-    $("#webcam").attr("src", "");
+    $("#webcam").html("Surveillance désactivée");
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
         if (webcam_stt) {
             webcam_stt = false;
-            // $("#webcam").html("Surveillance désactivée");
-            $("#webcam").attr("src", "");
-            // $("#webcam").trigger('pause');
+            window.stop();
+            $("#webcam").html("Surveillance désactivée");
         } else {
             webcam_stt = true;
-            // $("#webcam").html(html_url_webcam);
-            // $("#webcam").trigger('play');
-            $("#webcam").attr("src", html_url_webcam);
+            $("#webcam").html(html_url_webcam);
         }
     });
 
