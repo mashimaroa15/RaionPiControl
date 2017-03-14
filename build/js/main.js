@@ -36,7 +36,9 @@ $(document).ready(function () {
 
     var webcam_stt = false;
 
-    $("#webcam").html("Surveillance désactivée");
+    // $("#webcam").html("Surveillance désactivée");
+    $("#webcam").html(html_url_webcam);
+    $("#webcam").setAttribute("src", "");
 
     $("#surveillance-toggle").click(function () {
         console.log(webcam_stt);
