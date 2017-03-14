@@ -43,11 +43,13 @@ $(document).ready(function () {
         if (webcam_stt) {
             webcam_stt = false;
             // $("#webcam").html("Surveillance désactivée");
-            $("#webcam").trigger('pause');
+            $("#webcam").setAttribute("src", "");
+            // $("#webcam").trigger('pause');
         } else {
             webcam_stt = true;
-            $("#webcam").html(html_url_webcam);
-            $("#webcam").trigger('play');
+            // $("#webcam").html(html_url_webcam);
+            // $("#webcam").trigger('play');
+            $("#webcam").setAttribute("src", html_url_webcam);
         }
     });
 
