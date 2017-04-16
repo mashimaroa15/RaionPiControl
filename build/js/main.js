@@ -69,7 +69,7 @@ $(document).ready(function () {
     const DEF_FEEDRATE = 100;
     const DEF_FLOW = 100;
 
-    const MAX_TEMP_BED = 100;
+    const MAX_TEMP_BED = 75;
     const MAX_TEMP_TOOL = 265;
 
     const FAN_ON = "M106";
