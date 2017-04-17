@@ -1,0 +1,3 @@
+# use crontab -e to edit then add this line
+# or use crontab <this-file>
+@reboot /home/pi/scripts/webcam start
