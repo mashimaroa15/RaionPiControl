@@ -15,8 +15,8 @@ else
   git clone ${RAIONPICONTROL} ${DIR}
 fi &&
 
-echo Remove all files... &&
-cd ${WWW} && rm -rf * && ls -A1 | xargs rm -rf &&
+#echo Remove all files... &&
+#cd ${WWW} && rm -rf * && ls -A1 | xargs rm -rf &&
 
 echo Sync files with WWW directory... &&
 rsync -a --partial --delete ${DIR} ${WWW} &&
