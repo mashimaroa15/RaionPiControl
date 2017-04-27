@@ -859,8 +859,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#reset").onmouseover("To hard disconnect the control board");
-
     // JOG PANEL
 
     $("#collapse_control").click(function () {
