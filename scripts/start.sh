@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 clear
 cd /home/pi
 echo ################

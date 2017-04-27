@@ -849,6 +849,16 @@ $(document).ready(function () {
         });
     });
 
+    $("#reset").click(function () {
+        if(!connected) {
+            $.ajax({
+                url: 'src/php/resetUSB.php'
+            }).done(function (data) {
+                console.log(data);
+            });
+        }
+    });
+
     // JOG PANEL
 
     $("#collapse_control").click(function () {
