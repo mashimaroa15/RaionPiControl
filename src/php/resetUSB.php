@@ -7,4 +7,4 @@
  */
 
 $output = shell_exec('pwd');
-echo 'tada';
+echo $output;
