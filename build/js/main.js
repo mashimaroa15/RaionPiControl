@@ -850,8 +850,6 @@ $(document).ready(function () {
     });
 
     $("#reset").click(function () {
-        console.log('clicked');
-        console.log(connected);
         if(connected) {
             $.ajax({
                 url: 'src/php/resetUSB.php'
