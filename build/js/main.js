@@ -5,7 +5,7 @@ $(document).ready(function () {
     //var current_url = "http://192.168.1.69:5001/"; // for test local only
     var touchscreen;
     var current_url = window.location.href; //http://monitoring.3draion.com/raion1/   ---- with slash !!!
-    console.log(current_url);
+    //console.log(current_url);
     //test if this is for touchscreen
     if (current_url.indexOf("localhost") !== -1) {
         touchscreen = true;
