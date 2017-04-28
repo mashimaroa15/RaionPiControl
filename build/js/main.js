@@ -796,8 +796,11 @@ $(document).ready(function () {
     self.getPrinterInfo = function() {
         $.ajax({
             url: 'src/php/printerInfo.php'
-        }).done(function (data) {
-            console.log(data);
+        }).done(function (res) {
+            console.log(res.data);
+            self.infos = res.data.infos;
+            self.dimensions = res.data.dimensions;
+            self.versions = res.data.versions;
         });
     };
 
@@ -805,6 +808,8 @@ $(document).ready(function () {
     self.sendPrinterCommand(); // check if connected
     self.getFilesCommand();
     self.getPrinterInfo();
+
+    $('#title').html(self.infos.name + ' - 3DRAION');
 
     /* Loop Functions */
     // set interval
