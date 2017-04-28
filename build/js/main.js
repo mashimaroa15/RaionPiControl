@@ -858,6 +858,14 @@ $(document).ready(function () {
         }
     });
 
+    $("#update").click(function () {
+        $.ajax({
+            url: 'src/php/update.php'
+        }).done(function (data) {
+            console.log(data);
+        });
+    });
+
     // JOG PANEL
 
     $("#collapse_control").click(function () {
