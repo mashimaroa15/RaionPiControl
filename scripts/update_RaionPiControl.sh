@@ -6,12 +6,12 @@ DIR="/home/pi/RaionPiControl/"
 WWW="/var/www/html"
 RAIONPICONTROL="https://github.com/mashimaroa15/RaionPiControl.git"
 
-if [ $1 == "$BRANCH_MASTER" ]; then
+if [ "$1" == "${BRANCH_MASTER}" ]; then
   ${BRANCH_DEFAULT}=${BRANCH_MASTER}
 fi &&
 echo Check out branch ${BRANCH_DEFAULT} ... &&
 
-if [ -d "$DIR" ]; then
+if [ -d "${DIR}" ]; then
   echo ${DIR} exists &&
   cd ${DIR} &&
   git checkout -f -b ${BRANCH_DEFAULT} &&
