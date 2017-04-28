@@ -801,6 +801,8 @@ $(document).ready(function () {
             self.infos = res.data.infos;
             self.dimensions = res.data.dimensions;
             self.versions = res.data.versions;
+
+            $('#title').html(self.infos.name + ' - 3DRAION');
         });
     };
 
@@ -808,10 +810,6 @@ $(document).ready(function () {
     self.sendPrinterCommand(); // check if connected
     self.getFilesCommand();
     self.getPrinterInfo();
-
-    console.log(self.infos);
-
-    $('#title').html(self.infos.name + ' - 3DRAION');
 
     /* Loop Functions */
     // set interval
