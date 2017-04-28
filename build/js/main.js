@@ -39,7 +39,6 @@ $(document).ready(function () {
     $("#webcam").html("Surveillance désactivée");
 
     $("#surveillance-toggle").click(function () {
-        console.log(webcam_stt);
         if (webcam_stt) {
             webcam_stt = false;
             window.stop();
