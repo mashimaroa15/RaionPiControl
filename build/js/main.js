@@ -123,23 +123,26 @@ $(document).ready(function () {
             resetView();
         } else {
             connected = true;
+            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
+            $("#connection-btn-text").html("Déconnecter");
             //test if printing - paused - canceled
             if (info_printer.state.flags.printing) { //printing
+                $("#connection-text").html(" En cours impression").attr("style", "color: royalblue; font-weight: bold");
                 $(".status_job").removeClass("disabled");
                 $("#job_pause").html("Pause");
                 $(".file_print").addClass("disabled");
             } else if (info_printer.state.flags.paused) {  //paused
+                $("#connection-text").html(" En pause").attr("style", "color: orange; font-weight: bold");
                 $("#job_pause").html("Résumer");
                 $(".status_job").removeClass("disabled");
                 $(".file_print").addClass("disabled");
             } else { //nothing or canceled
+                $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
                 $("#job_pause").html("Pause");
                 $(".status_job").addClass("disabled");
                 $(".file_print").removeClass("disabled");
             }
 
-            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
-            $("#connection-btn-text").html("Déconnecter");
             temp_bed_actual = info_printer.temperature.bed.actual;
             temp_tool_actual = info_printer.temperature.tool0.actual;
             if (info_printer.temperature.bed.target == 0) {
@@ -797,7 +800,6 @@ $(document).ready(function () {
         $.ajax({
             url: 'src/php/printerInfo.php'
         }).done(function (res) {
-            console.log(res.data);
             self.infos = res.data.infos;
             self.dimensions = res.data.dimensions;
             self.versions = res.data.versions;
