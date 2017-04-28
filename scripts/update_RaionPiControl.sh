@@ -6,7 +6,7 @@ DIR="/home/pi/RaionPiControl/"
 WWW="/var/www/html"
 RAIONPICONTROL="https://github.com/mashimaroa15/RaionPiControl.git"
 
-if [ $1 = "$BRANCH_MASTER" ]; then
+if [ $1 == "$BRANCH_MASTER" ]; then
   ${BRANCH_DEFAULT}=${BRANCH_MASTER}
 fi &&
 echo Check out branch ${BRANCH_DEFAULT} ... &&
