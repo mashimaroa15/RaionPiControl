@@ -1,0 +1,2 @@
+#add this file to /etc/sudoers.d/
+www-data ALL=NOPASSWD: /home/pi/RaionPiControl/scripts/update_RaionPiControl.sh
