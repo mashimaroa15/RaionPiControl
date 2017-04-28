@@ -7,7 +7,7 @@ WWW="/var/www/html"
 RAIONPICONTROL="https://github.com/mashimaroa15/RaionPiControl.git"
 
 if [ "$1" == "${BRANCH_MASTER}" ]; then
-  ${BRANCH_DEFAULT}=${BRANCH_MASTER}
+  BRANCH_DEFAULT=${BRANCH_MASTER}
 fi &&
 echo Check out branch ${BRANCH_DEFAULT} ... &&
 
