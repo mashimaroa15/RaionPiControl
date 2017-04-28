@@ -793,11 +793,18 @@ $(document).ready(function () {
 
     _submit.addEventListener('click', upload);
 
-
+    self.getPrinterInfo = function() {
+        $.ajax({
+            url: 'src/php/printerInfo.php'
+        }).done(function (data) {
+            console.log(data);
+        });
+    };
 
     /* Init first time load page */
     self.sendPrinterCommand(); // check if connected
     self.getFilesCommand();
+    self.getPrinterInfo();
 
     /* Loop Functions */
     // set interval
