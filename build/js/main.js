@@ -809,6 +809,8 @@ $(document).ready(function () {
     self.getFilesCommand();
     self.getPrinterInfo();
 
+    console.log(self.infos);
+
     $('#title').html(self.infos.name + ' - 3DRAION');
 
     /* Loop Functions */
