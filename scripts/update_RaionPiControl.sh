@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 0.1
+# version 0.1.1
 DIR="/home/pi/RaionPiControl/"
 WWW="/var/www/html"
 RAIONPICONTROL="https://github.com/mashimaroa15/RaionPiControl.git"
