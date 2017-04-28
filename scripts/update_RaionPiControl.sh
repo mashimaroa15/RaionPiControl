@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
 # version 0.1.1
+BRANCH_DEFAULT="develop"
+BRANCH_MASTER="master"
 DIR="/home/pi/RaionPiControl/"
 WWW="/var/www/html"
 RAIONPICONTROL="https://github.com/mashimaroa15/RaionPiControl.git"
 
+if [ $1 = "$BRANCH_MASTER" ]; then
+  ${BRANCH_DEFAULT}=${BRANCH_MASTER}
+fi &&
+echo Check out branch ${BRANCH_DEFAULT} ... &&
+
 if [ -d "$DIR" ]; then
   echo ${DIR} exists &&
   cd ${DIR} &&
-  git pull &&
+  git checkout -f -b ${BRANCH_DEFAULT} &&
+  git pull origin ${BRANCH_DEFAULT} &&
   cd ~
 else
   echo ${DIR} doesn\'t exist &&
