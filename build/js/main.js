@@ -127,7 +127,7 @@ $(document).ready(function () {
             $("#connection-btn-text").html("Déconnecter");
             //test if printing - paused - canceled
             if (info_printer.state.flags.printing) { //printing
-                $("#connection-text").html(" En cours impression").attr("style", "color: royalblue; font-weight: bold");
+                $("#connection-text").html(" Impression en cours ...").attr("style", "color: royalblue; font-weight: bold");
                 $(".status_job").removeClass("disabled");
                 $("#job_pause").html("Pause");
                 $(".file_print").addClass("disabled");
