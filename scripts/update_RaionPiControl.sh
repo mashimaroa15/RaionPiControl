@@ -14,7 +14,7 @@ echo Check out branch ${BRANCH_DEFAULT} ... &&
 if [ -d "${DIR}" ]; then
   echo ${DIR} exists &&
   cd ${DIR} &&
-  git checkout -f -b ${BRANCH_DEFAULT} || true &&
+  git checkout -b ${BRANCH_DEFAULT} || true &&
   git pull origin ${BRANCH_DEFAULT} &&
   cd ~
 else
