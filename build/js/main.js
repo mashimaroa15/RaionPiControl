@@ -805,6 +805,7 @@ $(document).ready(function () {
             self.versions = res.data.versions;
 
             $('#title').html(self.infos.name + ' - 3DRAION');
+            $('#printer-name').html(self.infos.name);
         });
     };
 
