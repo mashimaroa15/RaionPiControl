@@ -79,6 +79,9 @@ $(document).ready(function () {
     const DEF_EXTRUDE_LENGTH = 0.1;
     const DEF_EXTRUDE_SPEED = 200;
 
+    const CONNECTION_WAIT_TIME = 10;
+    var wait_for_connection;
+
     var distance = DEF_DISTANCE;
     var multiplier = DEF_MULTIPLIER;
 
@@ -92,7 +95,6 @@ $(document).ready(function () {
     var temp_tool_actual;
     var temp_tool_target;
 
-    var sd_ready;
     var file_selected;
     var file_size;
     var file_date;
@@ -118,8 +120,12 @@ $(document).ready(function () {
             connected = false;
             $(".status_job").addClass("disabled");
             $(".file_print").addClass("disabled");
-            $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
-            $("#connection-btn-text").html(" Connecter");
+            if (wait_for_connection > 0) {
+                wait_for_connection--;
+            } else {
+                $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
+                $("#connection-btn-text").html(" Connecter");
+            }
             resetView();
         } else {
             connected = true;
@@ -203,7 +209,8 @@ $(document).ready(function () {
     $("#connection").click(function () {
         if (!connected) {
             self.sendConnectCommand(true);
-            $("#connection-text").html(" Connecté").attr("style", "color: green;");
+            wait_for_connection = CONNECTION_WAIT_TIME;
+            $("#connection-text").html(" Connecting...").attr("style", "color: red;");
             $("#connection-btn-text").html("Déconnecter");
         } else {
             self.sendConnectCommand(false);
