@@ -79,6 +79,9 @@ $(document).ready(function () {
     const DEF_EXTRUDE_LENGTH = 0.1;
     const DEF_EXTRUDE_SPEED = 200;
 
+    const CONNECTION_WAIT_TIME = 10;
+    var wait_for_connection;
+
     var distance = DEF_DISTANCE;
     var multiplier = DEF_MULTIPLIER;
 
@@ -92,7 +95,6 @@ $(document).ready(function () {
     var temp_tool_actual;
     var temp_tool_target;
 
-    var sd_ready;
     var file_selected;
     var file_size;
     var file_date;
@@ -118,28 +120,38 @@ $(document).ready(function () {
             connected = false;
             $(".status_job").addClass("disabled");
             $(".file_print").addClass("disabled");
-            $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
-            $("#connection-btn-text").html(" Connecter");
+            if (wait_for_connection > 0) {
+                wait_for_connection--;
+            } else {
+                $("#connection-text").html(" Déconnecté").attr("style", "color: red; font-weight: bold");
+                $("#connection-btn-text").html(" Connecter");
+            }
             resetView();
         } else {
             connected = true;
+            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
+            $("#connection-btn-text").html("Déconnecter");
             //test if printing - paused - canceled
             if (info_printer.state.flags.printing) { //printing
+                $("#connection-text").html(" Impression en cours ...").attr("style", "color: royalblue; font-weight: bold");
                 $(".status_job").removeClass("disabled");
                 $("#job_pause").html("Pause");
                 $(".file_print").addClass("disabled");
+                self.getJobInfo();
             } else if (info_printer.state.flags.paused) {  //paused
+                $("#connection-text").html(" En pause").attr("style", "color: orange; font-weight: bold");
                 $("#job_pause").html("Résumer");
                 $(".status_job").removeClass("disabled");
                 $(".file_print").addClass("disabled");
+                self.getJobInfo();
             } else { //nothing or canceled
+                $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
                 $("#job_pause").html("Pause");
                 $(".status_job").addClass("disabled");
                 $(".file_print").removeClass("disabled");
+                $("#printing-info").hide();
             }
 
-            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
-            $("#connection-btn-text").html("Déconnecter");
             temp_bed_actual = info_printer.temperature.bed.actual;
             temp_tool_actual = info_printer.temperature.tool0.actual;
             if (info_printer.temperature.bed.target == 0) {
@@ -197,7 +209,8 @@ $(document).ready(function () {
     $("#connection").click(function () {
         if (!connected) {
             self.sendConnectCommand(true);
-            $("#connection-text").html(" Connecté").attr("style", "color: green;");
+            wait_for_connection = CONNECTION_WAIT_TIME;
+            $("#connection-text").html(" Connecting...").attr("style", "color: red;");
             $("#connection-btn-text").html("Déconnecter");
         } else {
             self.sendConnectCommand(false);
@@ -385,6 +398,22 @@ $(document).ready(function () {
             dataType: "json"
         }).done(function (data) {
             self.getOneFileInfo(filename);
+        });
+    };
+
+    self.getJobInfo = function () {
+        $.get({
+            url: "src/php/job.php"
+        }).done(function (data) {
+            var jobInfo = data.data;
+            var percent = Math.round(jobInfo.progress.completion * 100);
+            var timeLeft = Math.round(jobInfo.progress.printTimeLeft / 60); // in minutes
+            $("#printing-info").show();
+            $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
+            $("#printing-progress").html("Progression : " + percent + " %");
+            $("#printing-time-left").html("Temps restant estimé : " + timeLeft + " min.");
+        }).fail(function (data) {
+            console.log("Fail to execute getJobInfo");
         });
     };
 
@@ -793,11 +822,23 @@ $(document).ready(function () {
 
     _submit.addEventListener('click', upload);
 
+    self.getPrinterInfo = function() {
+        $.ajax({
+            url: 'src/php/printerInfo.php'
+        }).done(function (res) {
+            self.infos = res.data.infos;
+            self.dimensions = res.data.dimensions;
+            self.versions = res.data.versions;
 
+            $('#title').html(self.infos.name + ' - 3DRAION');
+            $('#printer-name').html(self.infos.name);
+        });
+    };
 
     /* Init first time load page */
     self.sendPrinterCommand(); // check if connected
     self.getFilesCommand();
+    self.getPrinterInfo();
 
     /* Loop Functions */
     // set interval

@@ -10,7 +10,7 @@
     <!-- Favicons -->
     <link rel="shortcut icon" href="favicon.png" type="image/png">
 
-    <title>3DRAION - RaionPiControl</title>
+    <title id="title">RaionPiControl - 3DRAION</title>
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -78,8 +78,8 @@
                             </li>-->
                             <li><a href="javascript:location.reload(true);" id="userid">Refresh</a>
                             </li>
-                            <li><a id="update">Update</a>
-                            </li>
+                            <!--<li><a id="update">Update</a>-->
+                            <!--</li>-->
                         </ul>
                     </div>
 
@@ -113,9 +113,9 @@
                 <nav>
                     <div class="nav toggle">
                         <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-
                     </div>
-
+                    <div class="nav printer-name" id="printer-name">
+                    </div>
                     <ul class="nav navbar-nav navbar-right">
                         <!--<li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
@@ -278,18 +278,19 @@
                                     <span id="connection-btn-text">Déconnecter</span>
                                 </button>
                                 <!--<button type="button" class="btn btn-default btn-warning disabled status_job"-->
-                                        <!--id="job_pause">-->
-                                    <!--<span>Pause</span>-->
+                                <!--id="job_pause">-->
+                                <!--<span>Pause</span>-->
                                 <!--</button>-->
                                 <button type="button" class="btn btn-default btn-danger disabled status_job"
                                         id="job_cancel">
                                     <span>Annuler</span>
                                 </button>
                             </div>
-                            <!--<div>-->
-                            <!--<h5>Carte SD : <span class="info" id="sd_ready">N/A</span></h5>-->
-                            <!--<h5>Fichier choisi : <span class="info" id="file_selected">N/A</span></h5>-->
-                            <!--</div>-->
+                            <div id="printing-info">
+                                <h5><span class="info" id="printing-file"></span></h5>
+                                <h5><span class="info" id="printing-progress"></span></h5>
+                                <h5><span class="info" id="printing-time-left"></span></h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,11 +309,12 @@
                                 <li><a class="collapse-link" id="collapse_monitor"><i class="fa fa-chevron-up"></i></a>
                                 </li>
                             </ul>
-                            <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
+                            <!--<ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
                                 <li><a class="" style="color: #73879C;" id="surveillance-refresh"><i class="fa fa-refresh"></i> REFRESH</a></li>
-                            </ul>
+                            </ul>-->
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="" style="color: #73879C;" id="surveillance-toggle"><i class="fa fa-power-off"></i> ON/OFF</a></li>
+                                <li><a class="" style="color: #73879C;" id="surveillance-toggle"><i
+                                        class="fa fa-power-off"></i> ON/OFF</a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>

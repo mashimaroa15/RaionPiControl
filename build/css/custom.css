@@ -618,7 +618,7 @@ a:hover, a:focus {
   float: left;
   margin: 0;
   padding-top: 16px;
-  width: 70px; }
+  width: 50px; }
 
 .toggle a {
   padding: 15px 15px 0;
@@ -627,6 +627,15 @@ a:hover, a:focus {
 
 .toggle a i {
   font-size: 26px; }
+
+.printer-name {
+  float: left;
+  margin: 0;
+  padding-top: 16px;
+  width: 50px;
+  font-size: 26px;
+  font-weight: 600;
+}
 
 .nav.child_menu > li > a {
   color: rgba(255, 255, 255, 0.75);
