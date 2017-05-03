@@ -131,16 +131,19 @@ $(document).ready(function () {
                 $(".status_job").removeClass("disabled");
                 $("#job_pause").html("Pause");
                 $(".file_print").addClass("disabled");
+                self.getJobInfo();
             } else if (info_printer.state.flags.paused) {  //paused
                 $("#connection-text").html(" En pause").attr("style", "color: orange; font-weight: bold");
                 $("#job_pause").html("Résumer");
                 $(".status_job").removeClass("disabled");
                 $(".file_print").addClass("disabled");
+                self.getJobInfo();
             } else { //nothing or canceled
                 $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
                 $("#job_pause").html("Pause");
                 $(".status_job").addClass("disabled");
                 $(".file_print").removeClass("disabled");
+                $("#printing-info").hide();
             }
 
             temp_bed_actual = info_printer.temperature.bed.actual;
@@ -388,6 +391,22 @@ $(document).ready(function () {
             dataType: "json"
         }).done(function (data) {
             self.getOneFileInfo(filename);
+        });
+    };
+
+    self.getJobInfo = function () {
+        $.get({
+            url: "src/php/job.php"
+        }).done(function (data) {
+            var jobInfo = data.data;
+            var percent = Math.round(jobInfo.progress.completion * 100);
+            var timeLeft = Math.round(jobInfo.progress.printTimeLeft / 60); // in minutes
+            $("#printing-info").show();
+            $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
+            $("#printing-progress").html("Progression : " + percent + " %");
+            $("#printing-time-left").html("Temps restant estimé : " + timeLeft + " min.");
+        }).fail(function (data) {
+            console.log("Fail to execute getJobInfo");
         });
     };
 

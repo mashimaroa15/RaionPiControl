@@ -278,18 +278,19 @@
                                     <span id="connection-btn-text">Déconnecter</span>
                                 </button>
                                 <!--<button type="button" class="btn btn-default btn-warning disabled status_job"-->
-                                        <!--id="job_pause">-->
-                                    <!--<span>Pause</span>-->
+                                <!--id="job_pause">-->
+                                <!--<span>Pause</span>-->
                                 <!--</button>-->
                                 <button type="button" class="btn btn-default btn-danger disabled status_job"
                                         id="job_cancel">
                                     <span>Annuler</span>
                                 </button>
                             </div>
-                            <!--<div>-->
-                            <!--<h5>Carte SD : <span class="info" id="sd_ready">N/A</span></h5>-->
-                            <!--<h5>Fichier choisi : <span class="info" id="file_selected">N/A</span></h5>-->
-                            <!--</div>-->
+                            <div id="printing-info">
+                                <h5><span class="info" id="printing-file"></span></h5>
+                                <h5><span class="info" id="printing-progress"></span></h5>
+                                <h5><span class="info" id="printing-time-left"></span></h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,7 +313,8 @@
                                 <li><a class="" style="color: #73879C;" id="surveillance-refresh"><i class="fa fa-refresh"></i> REFRESH</a></li>
                             </ul>-->
                             <ul class="nav navbar-right panel_toolbox" style="min-width: 0;">
-                                <li><a class="" style="color: #73879C;" id="surveillance-toggle"><i class="fa fa-power-off"></i> ON/OFF</a></li>
+                                <li><a class="" style="color: #73879C;" id="surveillance-toggle"><i
+                                        class="fa fa-power-off"></i> ON/OFF</a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
