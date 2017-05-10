@@ -129,7 +129,7 @@ $(document).ready(function () {
             resetView();
         } else {
             connected = true;
-            $("#connection-text").html(" Connecté").attr("style", "color: green; font-weight: bold");
+            wait_for_connection = 0;
             $("#connection-btn-text").html("Déconnecter");
             //test if printing - paused - canceled
             if (info_printer.state.flags.printing) { //printing
@@ -154,12 +154,12 @@ $(document).ready(function () {
 
             temp_bed_actual = info_printer.temperature.bed.actual;
             temp_tool_actual = info_printer.temperature.tool0.actual;
-            if (info_printer.temperature.bed.target == 0) {
+            if (info_printer.temperature.bed.target === 0) {
                 temp_bed_target = "OFF";
             } else {
                 temp_bed_target = info_printer.temperature.bed.target;
             }
-            if (info_printer.temperature.tool0.target == 0) {
+            if (info_printer.temperature.tool0.target === 0) {
                 temp_tool_target = "OFF";
             } else {
                 temp_tool_target = info_printer.temperature.tool0.target;
