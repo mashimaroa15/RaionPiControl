@@ -406,13 +406,17 @@ $(document).ready(function () {
             url: "src/php/job.php"
         }).done(function (data) {
             var jobInfo = data.data;
-            var percent = Math.round(jobInfo.progress.completion * 100);
-            var timeLeft = Math.round(jobInfo.progress.printTimeLeft / 60); // in minutes
+            var percent;
+            var timeLeft;
             console.log(jobInfo, percent, timeLeft);
             $("#printing-info").show();
             $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
-            $("#printing-progress").html("Progression : " + percent + " %");
-            $("#printing-time-left").html("Temps restant estimé : " + timeLeft + " min.");
+            if (jobInfo['progress'].completion && jobInfo['progress'].printTimeLeft) {
+                percent = Math.round(jobInfo['progress'].completion * 100);
+                timeLeft = Math.round(jobInfo['progress'].printTimeLeft / 60); // in minutes
+                $("#printing-progress").html("Progression : " + percent + " %");
+                $("#printing-time-left").html("Temps restant estimé : " + timeLeft + " min.");
+            }
         }).fail(function (data) {
             console.log("Fail to execute getJobInfo");
         });
