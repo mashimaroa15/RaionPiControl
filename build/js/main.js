@@ -408,7 +408,7 @@ $(document).ready(function () {
             var jobInfo = JSON.parse(data);
             var percent;
             var timeLeft;
-            console.log(jobInfo);
+            console.log(jobInfo.job.file.name);
             // $("#printing-info").show();
             // $("#printing-file").html("Fichier : " + jobInfo['job']['file'].name);
             // if (jobInfo['progress'].completion && jobInfo['progress'].printTimeLeft) {
