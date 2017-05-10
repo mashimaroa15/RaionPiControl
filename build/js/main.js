@@ -405,7 +405,7 @@ $(document).ready(function () {
         $.get({
             url: "src/php/job.php"
         }).done(function (data) {
-            var jobInfo = data;
+            var jobInfo = JSON.parse(data);
             var percent;
             var timeLeft;
             console.log(jobInfo);
