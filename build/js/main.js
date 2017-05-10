@@ -408,15 +408,24 @@ $(document).ready(function () {
             var jobInfo = JSON.parse(data);
             var percent;
             var timeLeft;
+            var timeLeftHour;
+            var timeLeftMin;
             console.log(jobInfo.job.file.name);
-            // $("#printing-info").show();
-            // $("#printing-file").html("Fichier : " + jobInfo['job']['file'].name);
-            // if (jobInfo['progress'].completion && jobInfo['progress'].printTimeLeft) {
-            //     percent = Math.round(jobInfo['progress'].completion * 100);
-            //     timeLeft = Math.round(jobInfo['progress'].printTimeLeft / 60); // in minutes
-            //     $("#printing-progress").html("Progression : " + percent + " %");
-            //     $("#printing-time-left").html("Temps restant estimé : " + timeLeft + " min.");
-            // }
+            $("#printing-info").show();
+            $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
+            if (jobInfo.progress.completion && jobInfo.progress.printTimeLeft) {
+                percent = Math.round(jobInfo.progress.completion * 100);
+                $("#printing-progress").html("Progression : " + percent + " %");
+                timeLeft = jobInfo.progress.printTimeLeft;
+                if (timeLeft > 3600) {
+                    timeLeftHour = Math.round(timeLeft / 3600);
+                    timeLeftMin = Math.round((timeLeft / 3600 - timeLeftHour) * 60);
+                    $("#printing-time-left").html("Temps restant estimé : " + timeLeftHour + " h " + timeLeftMin + " min.");
+                } else {
+                    timeLeftMin = Math.round(timeLeft / 60);
+                    $("#printing-time-left").html("Temps restant estimé : " + timeLeftMin + " min.");
+                }
+            }
         }).fail(function (data) {
             console.log("Fail to execute getJobInfo");
         });
