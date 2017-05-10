@@ -408,6 +408,7 @@ $(document).ready(function () {
             var jobInfo = data.data;
             var percent = Math.round(jobInfo.progress.completion * 100);
             var timeLeft = Math.round(jobInfo.progress.printTimeLeft / 60); // in minutes
+            console.log(jobInfo, percent, timeLeft);
             $("#printing-info").show();
             $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
             $("#printing-progress").html("Progression : " + percent + " %");
