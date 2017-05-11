@@ -425,6 +425,9 @@ $(document).ready(function () {
                     timeLeftMin = Math.round(timeLeft / 60);
                     $("#printing-time-left").html("Temps restant estimé : " + timeLeftMin + " min.");
                 }
+            } else {
+                $("#printing-progress").html("Progression : estimation en cours...");
+                $("#printing-time-left").html("Temps restant estimé : estimation en cours...");
             }
         }).fail(function (data) {
             console.log("Fail to execute getJobInfo");
