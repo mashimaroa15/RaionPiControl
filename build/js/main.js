@@ -414,11 +414,11 @@ $(document).ready(function () {
             $("#printing-info").show();
             $("#printing-file").html("Fichier : " + jobInfo.job.file.name);
             if (jobInfo.progress.completion && jobInfo.progress.printTimeLeft) {
-                percent = Math.round(jobInfo.progress.completion * 100);
+                percent = Math.round(jobInfo.progress.completion *10) / 10;
                 $("#printing-progress").html("Progression : " + percent + " %");
                 timeLeft = jobInfo.progress.printTimeLeft;
                 if (timeLeft > 3600) {
-                    timeLeftHour = Math.round(timeLeft / 3600);
+                    timeLeftHour = Math.floor(timeLeft / 3600);
                     timeLeftMin = Math.round((timeLeft / 3600 - timeLeftHour) * 60);
                     $("#printing-time-left").html("Temps restant estimé : " + timeLeftHour + " h " + timeLeftMin + " min.");
                 } else {
